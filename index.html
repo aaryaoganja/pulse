@@ -3319,7 +3319,7 @@ document.getElementById('reject-modal').addEventListener('click', e => {
 function renderFamilies() {
   const container = document.getElementById('family-list');
   container.innerHTML = families.map((f, idx) => `
-    <div class="family-row ${idx < 4 ? 'expanded' : ''}" id="family-${idx}">
+    <div class="family-row ${idx === 0 ? 'expanded' : ''}" id="family-${idx}">
       <div class="family-header ${f.firing ? 'firing' : ''}" onclick="toggleFamily(${idx})">
         <div class="family-status-dot ${f.firing ? 'firing' : ''}"></div>
         <div class="family-name ${f.firing ? 'firing' : ''}">${f.name}</div>
