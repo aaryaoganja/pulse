@@ -1,0 +1,3555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Superleap · Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============= DESIGN TOKENS ============= */
+:root {
+  --bg-app: #FAFBF7;
+  --bg-card: #FFFFFF;
+  --bg-section: #F4F9F2;
+  --bg-sidebar: #F8FAF6;
+  --bg-hover: #FAFBF7;
+
+  --green-primary: #22C55E;
+  --green-hover: #16A34A;
+  --green-soft: #DCFCE7;
+  --green-dark: #15803D;
+
+  --amber: #F59E0B;
+  --amber-soft: #FEF3C7;
+  --amber-dark: #B45309;
+
+  --red: #EF4444;
+  --red-soft: #FEE2E2;
+  --red-dark: #B91C1C;
+
+  --slate-900: #0F1A0F;
+  --slate-700: #334155;
+  --slate-500: #64748B;
+  --slate-400: #94A3B8;
+  --slate-300: #CBD5E1;
+
+  --border: #E5EBE3;
+  --border-light: #F1F5F0;
+
+  --shadow-sm: 0 1px 2px rgba(15, 26, 15, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 26, 15, 0.08);
+  --shadow-lg: 0 12px 32px rgba(15, 26, 15, 0.12);
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter Tight', 'Inter', -apple-system, sans-serif;
+  background: var(--bg-app);
+  color: var(--slate-900);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============= LAYOUT ============= */
+.app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 24px 12px;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+.logo-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--green-primary);
+  border-radius: 50%;
+}
+
+.nav-section { flex: 1; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  color: var(--slate-700);
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  transition: background 0.15s;
+}
+.nav-item:hover { background: var(--bg-hover); }
+.nav-item.active { background: var(--green-soft); color: var(--green-dark); }
+.nav-item.active .icon { color: var(--green-dark); }
+.nav-item .icon { width: 16px; height: 16px; color: var(--slate-500); flex-shrink: 0; }
+.new-pill {
+  margin-left: auto;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  background: var(--green-primary);
+  color: white;
+  border-radius: var(--radius-full);
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
+}
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22C55E, #16A34A);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.user-info { line-height: 1.3; min-width: 0; }
+.user-name { font-weight: 600; font-size: 13px; }
+.user-role { font-size: 11.5px; color: var(--slate-500); }
+
+/* ============= MAIN CONTENT ============= */
+.main {
+  display: flex;
+  flex-direction: column;
+}
+.topbar {
+  height: 56px;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  font-size: 13px;
+  color: var(--slate-500);
+}
+.breadcrumb-link {
+  color: var(--slate-500);
+  cursor: pointer;
+  text-decoration: none;
+}
+.breadcrumb-link:hover { color: var(--green-dark); }
+.breadcrumb-sep { margin: 0 8px; color: var(--slate-300); }
+.breadcrumb-current { color: var(--slate-900); font-weight: 500; }
+
+.content {
+  padding: 32px;
+  max-width: 1400px;
+  width: 100%;
+}
+
+/* ============= TYPOGRAPHY ============= */
+h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.3; }
+h2 { font-size: 18px; font-weight: 600; line-height: 1.4; }
+h3 { font-size: 16px; font-weight: 600; }
+.caption {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--slate-500);
+}
+.muted { color: var(--slate-500); }
+.small { font-size: 13px; }
+
+/* ============= PAGE HEADER ============= */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+.page-header .subtitle {
+  color: var(--slate-500);
+  font-size: 14px;
+  margin-top: 4px;
+}
+.page-actions { display: flex; gap: 8px; }
+
+/* ============= BUTTONS ============= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  background: none;
+  color: var(--slate-900);
+}
+.btn-primary {
+  background: var(--green-primary);
+  color: white;
+}
+.btn-primary:hover { background: var(--green-hover); }
+.btn-secondary {
+  background: white;
+  border-color: var(--border);
+  color: var(--slate-900);
+}
+.btn-secondary:hover { background: var(--bg-section); border-color: var(--slate-300); }
+.btn-ghost { color: var(--slate-700); }
+.btn-ghost:hover { background: var(--bg-section); }
+.btn-danger {
+  background: white;
+  color: var(--red-dark);
+  border-color: var(--border);
+}
+.btn-danger:hover { background: var(--red-soft); border-color: var(--red); }
+.btn .icon { width: 14px; height: 14px; }
+
+/* ============= STAT CARDS ============= */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-number {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.stat-card.hot .stat-number { color: var(--green-dark); }
+.stat-label { color: var(--slate-700); font-size: 13.5px; }
+.stat-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+/* ============= FILTER BAR ============= */
+.filter-bar {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--bg-section);
+  color: var(--slate-700);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.filter-pill:hover { border-color: var(--green-primary); }
+.filter-pill .chevron { width: 12px; height: 12px; opacity: 0.6; }
+.filter-search {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-app);
+  border: 1px solid transparent;
+}
+.filter-search input {
+  border: none;
+  background: none;
+  flex: 1;
+  font-family: inherit;
+  font-size: 13.5px;
+  outline: none;
+  color: var(--slate-900);
+}
+.filter-search .icon { width: 14px; height: 14px; color: var(--slate-500); }
+
+/* ============= TABLE ============= */
+.table-wrapper {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.table-section-header {
+  padding: 16px 20px;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.table-section-header .icon { width: 16px; height: 16px; color: var(--green-dark); }
+.table-section-header h3 { font-size: 14.5px; }
+.table-section-header .count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--slate-500);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead {
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+}
+th {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--slate-500);
+}
+td {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border-light);
+  vertical-align: middle;
+  font-size: 13.5px;
+}
+tbody tr { cursor: pointer; transition: background 0.1s; }
+tbody tr:hover { background: var(--bg-hover); }
+
+/* ============= COMPANY CELL ============= */
+.company-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.company-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #DCFCE7, #BBF7D0);
+  color: var(--green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.company-info { min-width: 0; }
+.company-name { font-weight: 600; font-size: 13.5px; }
+.company-meta { color: var(--slate-500); font-size: 12px; }
+
+/* ============= BADGES & PILLS ============= */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+.badge-hot { background: var(--green-soft); color: var(--green-dark); }
+.badge-hot .badge-dot { background: var(--green-primary); }
+.badge-watch { background: var(--amber-soft); color: var(--amber-dark); }
+.badge-watch .badge-dot { background: var(--amber); }
+.badge-skip { background: #F1F5F0; color: var(--slate-500); }
+.badge-skip .badge-dot { background: var(--slate-400); }
+.badge-info { background: #DBEAFE; color: #1E40AF; }
+.badge-info .badge-dot { background: #3B82F6; }
+.badge-urgent { background: var(--red-soft); color: var(--red-dark); }
+.badge-urgent .badge-dot { background: var(--red); }
+
+.trigger-pill {
+  display: inline-flex;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  background: #F0F9FF;
+  color: #0369A1;
+  font-weight: 500;
+}
+
+.pitch-cell {
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--slate-700);
+  font-size: 13px;
+}
+
+.action-cell {
+  display: flex;
+  gap: 4px;
+}
+.action-btn {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--slate-500);
+  transition: all 0.15s;
+}
+.action-btn:hover { background: var(--bg-section); }
+.action-btn.approve:hover { background: var(--green-soft); color: var(--green-dark); border-color: var(--green-primary); }
+.action-btn.snooze:hover { background: var(--amber-soft); color: var(--amber-dark); border-color: var(--amber); }
+.action-btn.reject:hover { background: var(--red-soft); color: var(--red-dark); border-color: var(--red); }
+.action-btn .icon { width: 14px; height: 14px; }
+
+.unassigned { color: var(--slate-400); font-size: 13px; font-style: italic; }
+.assigned-cell { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.avatar-sm {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FCD34D, #F59E0B);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 10px;
+}
+.avatar-sm.blue { background: linear-gradient(135deg, #60A5FA, #3B82F6); }
+.avatar-sm.purple { background: linear-gradient(135deg, #C084FC, #9333EA); }
+
+/* ============= MODAL ============= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 26, 15, 0.5);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 20px 20px;
+  z-index: 1000;
+  overflow-y: auto;
+}
+.modal-backdrop.active { display: flex; }
+.modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 760px;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 40px;
+}
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.modal-header h2 { margin-bottom: 4px; }
+.modal-header .subtitle { color: var(--slate-500); font-size: 13px; }
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--slate-500);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+}
+.modal-close:hover { background: var(--bg-section); }
+.modal-body { padding: 24px; }
+.modal-footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ============= RUBRIC MODAL ============= */
+.rubric-section {
+  margin-bottom: 24px;
+}
+.rubric-section:last-child { margin-bottom: 0; }
+.rubric-section-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--slate-500);
+  margin-bottom: 10px;
+}
+.nl-description {
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  font-style: italic;
+  color: var(--slate-700);
+  line-height: 1.7;
+  font-size: 14px;
+}
+.update-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--green-dark);
+  font-size: 12.5px;
+  cursor: pointer;
+  font-weight: 500;
+  font-style: normal;
+}
+.update-link:hover { text-decoration: underline; }
+
+.parsed-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.parsed-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+.parsed-card-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
+.parsed-card-content {
+  font-size: 13px;
+  color: var(--slate-700);
+  line-height: 1.6;
+}
+.parsed-card-content ul { list-style: none; }
+.parsed-card-content li { padding: 2px 0; }
+.parsed-card-content strong { color: var(--slate-900); font-weight: 600; }
+
+.weight-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12.5px;
+}
+.weight-bar-label { width: 90px; color: var(--slate-700); }
+.weight-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.weight-bar-fill {
+  height: 100%;
+  background: var(--green-primary);
+  border-radius: var(--radius-full);
+}
+.weight-bar-fill.deprioritized { background: var(--slate-400); }
+.weight-bar-value {
+  font-size: 12px;
+  color: var(--slate-500);
+  font-weight: 500;
+  width: 36px;
+  text-align: right;
+}
+
+/* ============= DOSSIER ============= */
+.dossier-header {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+}
+.dossier-company {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.company-logo-lg {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #DCFCE7, #86EFAC);
+  color: var(--green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.dossier-meta-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.meta-pill {
+  font-size: 11.5px;
+  padding: 2px 9px;
+  background: var(--bg-section);
+  color: var(--slate-700);
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+.dossier-score-block {
+  text-align: right;
+  margin-bottom: 12px;
+}
+.dossier-score {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--green-dark);
+}
+.dossier-score-meta {
+  font-size: 12px;
+  color: var(--slate-500);
+  margin-top: 2px;
+}
+.dossier-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.dossier-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.card-header h2 { font-size: 15.5px; }
+.card-header .icon { width: 16px; height: 16px; color: var(--green-primary); }
+.sparkle-icon { color: var(--green-primary); }
+
+.trigger-narrative {
+  font-size: 14.5px;
+  color: var(--slate-700);
+  line-height: 1.7;
+}
+.pitch-angle-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--bg-section);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--green-primary);
+}
+.pitch-angle-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green-dark);
+  margin-bottom: 4px;
+}
+.pitch-angle-text {
+  font-size: 13.5px;
+  color: var(--slate-700);
+}
+
+/* ============= EVIDENCE BY FAMILY ============= */
+.family-row {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.family-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  background: white;
+  transition: background 0.1s;
+}
+.family-header:hover { background: var(--bg-hover); }
+.family-header.firing { background: var(--bg-section); }
+.family-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--slate-300);
+  flex-shrink: 0;
+}
+.family-status-dot.firing { background: var(--green-primary); }
+.family-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--slate-700);
+}
+.family-name.firing { color: var(--green-dark); }
+.family-meta {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.family-signal-count {
+  font-size: 12px;
+  color: var(--slate-500);
+  font-weight: 500;
+}
+.family-weight-pill {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-weight: 500;
+}
+.family-weight-pill.deprioritized {
+  background: #F1F5F0;
+  color: var(--slate-500);
+}
+.family-weight-pill.passed {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+.family-chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--slate-500);
+  transition: transform 0.2s;
+}
+.family-row.expanded .family-chevron { transform: rotate(180deg); }
+
+.family-body {
+  display: none;
+  padding: 4px 14px 14px;
+  background: var(--bg-app);
+  border-top: 1px solid var(--border);
+}
+.family-row.expanded .family-body { display: block; }
+
+.signal-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-top: 10px;
+}
+.signal-title {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
+.signal-row {
+  display: flex;
+  gap: 6px;
+  font-size: 12.5px;
+  margin-bottom: 4px;
+  align-items: baseline;
+}
+.signal-row-label {
+  color: var(--slate-500);
+  font-weight: 500;
+  width: 130px;
+  flex-shrink: 0;
+}
+.signal-row-value {
+  color: var(--slate-700);
+  flex: 1;
+}
+.signal-row.match {
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: var(--green-soft);
+  border-radius: var(--radius-sm);
+}
+.signal-row.match .signal-row-label { color: var(--green-dark); }
+.signal-row.match .signal-row-value { color: var(--green-dark); font-weight: 500; }
+.signal-row.match .strong-match {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 10.5px;
+  padding: 1px 6px;
+  background: var(--green-primary);
+  color: white;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.source-link {
+  color: var(--green-dark);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--green-primary);
+}
+.source-link:hover { color: var(--green-hover); }
+
+.confidence-pill {
+  display: inline-flex;
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+}
+.confidence-high { background: var(--green-soft); color: var(--green-dark); }
+.confidence-medium { background: var(--amber-soft); color: var(--amber-dark); }
+.confidence-low { background: #F1F5F0; color: var(--slate-500); }
+
+.raw-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  color: var(--slate-500);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  user-select: none;
+}
+.raw-toggle:hover { color: var(--green-dark); }
+.raw-toggle .icon { width: 12px; height: 12px; transition: transform 0.2s; }
+.raw-evidence {
+  display: none;
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--bg-sidebar);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--slate-300);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+  font-size: 12px;
+  color: var(--slate-700);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.raw-evidence.shown { display: block; }
+.signal-card.raw-shown .raw-toggle .icon { transform: rotate(180deg); }
+
+/* ============= SCORE BREAKDOWN ============= */
+.score-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.score-bar-label { width: 110px; color: var(--slate-700); font-weight: 500; }
+.score-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  background: var(--green-primary);
+  border-radius: var(--radius-full);
+}
+.score-bar-pct {
+  width: 40px;
+  text-align: right;
+  font-size: 12.5px;
+  color: var(--slate-500);
+  font-weight: 500;
+}
+.causal-chain {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: var(--bg-section);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--slate-700);
+  border-left: 3px solid var(--green-primary);
+}
+.causal-chain strong { color: var(--green-dark); font-weight: 600; }
+
+/* ============= SUGGESTED BUYERS ============= */
+.buyer-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.buyer-card:last-child { border-bottom: none; padding-bottom: 0; }
+.buyer-card:first-child { padding-top: 0; }
+.buyer-info { flex: 1; }
+.buyer-name { font-weight: 600; font-size: 13.5px; }
+.buyer-role { font-size: 12.5px; color: var(--slate-500); margin-bottom: 4px; }
+.buyer-reason { font-size: 12.5px; color: var(--slate-700); line-height: 1.5; }
+.buyer-action {
+  color: var(--slate-500);
+  cursor: pointer;
+  padding: 4px;
+}
+.buyer-action:hover { color: var(--green-dark); }
+
+/* ============= CAVEATS ============= */
+.caveats-card {
+  background: #FFFBEB;
+  border-color: #FEF3C7;
+}
+.caveats-card .card-header h2 { color: var(--amber-dark); }
+.caveats-card .card-header .icon { color: var(--amber); }
+.caveats-list {
+  list-style: none;
+  font-size: 13px;
+  color: var(--slate-700);
+}
+.caveats-list li {
+  padding: 6px 0 6px 18px;
+  position: relative;
+  line-height: 1.6;
+}
+.caveats-list li::before {
+  content: "!";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  color: var(--amber);
+  font-weight: 700;
+}
+
+/* ============= OUTREACH PAGE ============= */
+.context-strip {
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.context-strip .icon-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--green-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.context-strip-text {
+  flex: 1;
+  font-size: 13.5px;
+  color: var(--slate-700);
+}
+.context-strip-text strong { color: var(--slate-900); }
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.tab {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--slate-500);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+}
+.tab:hover { color: var(--slate-900); }
+.tab.active { color: var(--slate-900); border-bottom-color: var(--green-primary); font-weight: 600; }
+
+.outreach-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+}
+
+.draft-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.field-row { margin-bottom: 14px; }
+.field-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--slate-500);
+  margin-bottom: 6px;
+  display: block;
+}
+.field-input, .field-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-app);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--slate-900);
+  line-height: 1.6;
+  resize: vertical;
+}
+.field-input:focus, .field-textarea:focus {
+  outline: none;
+  border-color: var(--green-primary);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+.field-textarea {
+  min-height: 220px;
+  white-space: pre-wrap;
+}
+.field-readonly {
+  background: var(--bg-sidebar);
+  color: var(--slate-700);
+  border-color: var(--border-light);
+}
+
+.draft-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.whatsapp-bubble {
+  background: #DCF8C6;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #1F2937;
+  line-height: 1.6;
+  position: relative;
+  margin-top: 6px;
+  white-space: pre-wrap;
+  border: 1px solid #BBF7D0;
+}
+.whatsapp-bubble:focus { outline: 2px solid var(--green-primary); }
+.char-count {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--slate-500);
+  text-align: right;
+}
+
+.metadata-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.metadata-card h3 {
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--slate-900);
+}
+.metadata-card .icon { width: 14px; height: 14px; display: inline; vertical-align: -2px; color: var(--green-primary); }
+.metadata-list {
+  list-style: none;
+  font-size: 12.5px;
+  color: var(--slate-700);
+  line-height: 1.7;
+}
+.metadata-list li {
+  padding: 2px 0 2px 14px;
+  position: relative;
+}
+.metadata-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--green-primary);
+}
+.check-list li::before {
+  content: "✓";
+  color: var(--green-primary);
+  font-weight: 700;
+}
+
+/* ============= VOICE AGENT ============= */
+.agent-block {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.agent-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.agent-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.agent-meta {
+  font-size: 12.5px;
+  color: var(--slate-500);
+  line-height: 1.6;
+}
+.agent-meta strong { color: var(--slate-900); font-weight: 600; }
+
+.quote-block {
+  margin-top: 8px;
+  padding: 14px 16px 14px 18px;
+  background: var(--bg-section);
+  border-left: 3px solid var(--green-primary);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--slate-700);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.objection-row {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.objection-q {
+  padding: 10px 14px;
+  background: var(--bg-section);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--slate-900);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.objection-q:hover { background: #E8F5E9; }
+.objection-a {
+  display: none;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--slate-700);
+  background: white;
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+}
+.objection-row.open .objection-a { display: block; }
+.objection-row.open .objection-q .icon { transform: rotate(180deg); }
+.objection-q .icon { width: 14px; height: 14px; transition: transform 0.2s; }
+
+/* ============= TOAST ============= */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--slate-900);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 2000;
+  transition: transform 0.3s ease-out, opacity 0.3s;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toast.shown {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+.toast .icon { width: 16px; height: 16px; color: var(--green-primary); }
+
+/* ============= FUNCTIONAL FILTER DROPDOWNS ============= */
+.filter-pill-wrapper {
+  position: relative;
+}
+.filter-pill.active {
+  background: var(--green-soft);
+  color: var(--green-dark);
+  border-color: var(--green-primary);
+}
+.filter-pill.active .chevron { color: var(--green-dark); }
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+  padding: 6px;
+}
+.filter-dropdown.shown { display: block; }
+.filter-option {
+  padding: 8px 12px;
+  font-size: 13.5px;
+  color: var(--slate-700);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.filter-option:hover { background: var(--bg-section); }
+.filter-option.selected {
+  color: var(--green-dark);
+  font-weight: 500;
+}
+.filter-option .check {
+  width: 14px;
+  height: 14px;
+  color: var(--green-primary);
+  opacity: 0;
+  flex-shrink: 0;
+}
+.filter-option.selected .check { opacity: 1; }
+.filter-clear-row {
+  border-top: 1px solid var(--border-light);
+  margin-top: 4px;
+  padding-top: 4px;
+}
+.filter-clear-row .filter-option {
+  font-size: 12px;
+  color: var(--slate-500);
+}
+
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--slate-500);
+}
+.empty-state h3 {
+  font-size: 15px;
+  color: var(--slate-700);
+  margin-bottom: 6px;
+}
+.empty-state p {
+  font-size: 13.5px;
+  margin-bottom: 16px;
+}
+
+.row-fading-out {
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  transform: translateX(20px);
+}
+
+/* ============= REJECT MODAL ============= */
+.reject-modal-body {
+  padding: 20px 24px;
+}
+.reject-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.reject-reason-option {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 13.5px;
+  color: var(--slate-700);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.15s;
+}
+.reject-reason-option:hover {
+  border-color: var(--green-primary);
+  background: var(--bg-section);
+}
+.reject-reason-option.selected {
+  border-color: var(--green-primary);
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-weight: 500;
+}
+.reject-reason-icon {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--slate-300);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+}
+.reject-reason-option.selected .reject-reason-icon {
+  border-color: var(--green-primary);
+  background: var(--green-primary);
+}
+.reject-reason-option.selected .reject-reason-icon::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: white;
+  border-radius: 50%;
+}
+.reject-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-app);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--slate-900);
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 80px;
+}
+.reject-textarea:focus {
+  outline: none;
+  border-color: var(--green-primary);
+  background: white;
+}
+
+/* ============= FUNCTIONAL FILTER DROPDOWNS END ============= */
+
+/* ============= V1/V2 ROADMAP MODAL ============= */
+.roadmap-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  border-radius: var(--radius-full);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-left: 6px;
+}
+.roadmap-pill.v2 {
+  background: #FEF3C7;
+  color: var(--amber-dark);
+}
+
+.phase-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.phase-section:last-child { border-bottom: none; }
+.phase-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.phase-title h3 { font-size: 14.5px; }
+.phase-timeline {
+  font-size: 12px;
+  color: var(--slate-500);
+  margin-bottom: 14px;
+}
+
+.v-feature-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.v-feature-row:last-child { border-bottom: none; }
+.v-feature-number {
+  width: 24px;
+  height: 24px;
+  background: var(--bg-section);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green-dark);
+  flex-shrink: 0;
+}
+.v-feature-content { flex: 1; }
+.v-feature-title {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--slate-900);
+  margin-bottom: 4px;
+}
+.v-feature-desc {
+  font-size: 12.5px;
+  color: var(--slate-700);
+  line-height: 1.55;
+}
+
+/* ============= ENRICHMENT ============= */
+.enrich-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 7px 10px;
+  background: white;
+  border: 1px dashed var(--green-primary);
+  color: var(--green-dark);
+  border-radius: var(--radius-md);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.enrich-btn:hover { background: var(--green-soft); }
+.enrich-btn:disabled { cursor: wait; opacity: 0.7; }
+.enrich-btn .icon { width: 13px; height: 13px; }
+.enrich-btn.loading .icon { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.enriched-block {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--bg-section);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--green-soft);
+}
+.enriched-block.shown { display: block; }
+.enriched-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  padding: 3px 0;
+}
+.enriched-field .icon { width: 12px; height: 12px; color: var(--slate-500); flex-shrink: 0; }
+.enriched-field-value {
+  color: var(--slate-900);
+  font-weight: 500;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 12px;
+}
+.enriched-meta {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--slate-500);
+}
+.provider-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  color: var(--slate-700);
+  font-weight: 500;
+}
+
+.waterfall-trace {
+  margin-top: 6px;
+  padding: 8px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+}
+.waterfall-step {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+}
+.waterfall-step.miss { color: var(--slate-500); }
+.waterfall-step.hit { color: var(--green-dark); font-weight: 600; }
+.waterfall-step.skip { color: var(--slate-400); }
+
+/* ============= PAGE TRANSITIONS ============= */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ============= ICONS (lucide-style inline SVG) ============= */
+.icon { display: inline-block; flex-shrink: 0; }
+
+/* ============= UTIL ============= */
+.flex { display: flex; }
+.flex-1 { flex: 1; }
+.gap-2 { gap: 8px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.text-right { text-align: right; }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ============== SIDEBAR ============== -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-dot"></span>
+      Superleap
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-item" onclick="toast('Dashboard not in this prototype')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item active" onclick="navigateTo('signalBrief')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+        Pulse
+        <span class="new-pill">NEW</span>
+      </div>
+      <div class="nav-item" onclick="toast('Leads module')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Leads
+      </div>
+      <div class="nav-item" onclick="toast('Pipeline view')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        Pipeline
+      </div>
+      <div class="nav-item" onclick="toast('Engage module')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Engage
+      </div>
+      <div class="nav-item" onclick="toast('SuperAgents')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+        SuperAgents
+      </div>
+      <div class="nav-item" onclick="toast('Workflows')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M6 9v3a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9"/></svg>
+        Workflows
+      </div>
+      <div class="nav-item" onclick="toast('Reports')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Reports
+      </div>
+      <div class="nav-item" onclick="toast('Integrations')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Integrations
+      </div>
+      <div class="nav-item" onclick="toast('Settings')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </div>
+      <div style="margin-top: 12px; padding: 8px 12px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--slate-400);">For Reviewers</div>
+      <div class="nav-item" onclick="openRoadmapModal()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+        Product roadmap
+        <span class="new-pill" style="background: var(--amber); ">v1 + v2</span>
+      </div>
+    </nav>
+
+    <div class="user-card">
+      <div class="avatar">KM</div>
+      <div class="user-info">
+        <div class="user-name">Karan Mehta</div>
+        <div class="user-role">BD Manager · Insure+</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============== MAIN CONTENT ============== -->
+  <main class="main">
+    <div class="topbar" id="breadcrumb">
+      <span class="breadcrumb-link" onclick="navigateTo('signalBrief')">Home</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current" id="breadcrumb-current">Pulse</span>
+    </div>
+
+    <div class="content">
+
+      <!-- ============== PAGE 1: SIGNAL BRIEF ============== -->
+      <div class="page active" id="page-signalBrief">
+        <div class="page-header">
+          <div>
+            <h1>Pulse Brief</h1>
+            <div class="subtitle">Saturday, May 16, 2026 · 12 hot prospects this week</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary" onclick="toast('Signals refreshed')">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              Refresh signals
+            </button>
+            <button class="btn btn-ghost" onclick="openRubricModal()">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              View rubric
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card hot">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Hot prospects — action this week</div>
+            <div class="stat-delta">
+              <svg class="icon" style="width:11px;height:11px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              3 vs. last week
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" style="color: var(--amber-dark);">47</div>
+            <div class="stat-label">Watchlist — renewal due, awaiting trigger</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" style="color: var(--slate-500);">28</div>
+            <div class="stat-label">Tracked — strong events, not yet in window</div>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="filter-pill-wrapper">
+            <div class="filter-pill" id="filter-pill-sector" onclick="toggleDropdown('sector', event)">
+              <span id="filter-label-sector">Sector: All</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="filter-dropdown" id="filter-dropdown-sector">
+              <!-- Options populated by JS -->
+            </div>
+          </div>
+
+          <div class="filter-pill-wrapper">
+            <div class="filter-pill" id="filter-pill-score" onclick="toggleDropdown('score', event)">
+              <span id="filter-label-score">Score: All</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="filter-dropdown" id="filter-dropdown-score">
+              <div class="filter-option" onclick="setFilter('score', 'all', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All scores</div>
+              <div class="filter-option" onclick="setFilter('score', '80+', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>80+ (top tier)</div>
+              <div class="filter-option" onclick="setFilter('score', '70-79', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>70-79</div>
+              <div class="filter-option" onclick="setFilter('score', '60-69', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>60-69</div>
+            </div>
+          </div>
+
+          <div class="filter-pill-wrapper">
+            <div class="filter-pill" id="filter-pill-renewal" onclick="toggleDropdown('renewal', event)">
+              <span id="filter-label-renewal">Renewal: All</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="filter-dropdown" id="filter-dropdown-renewal">
+              <div class="filter-option" onclick="setFilter('renewal', 'all', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All renewals</div>
+              <div class="filter-option" onclick="setFilter('renewal', 'urgent', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>&lt; 45 days (urgent)</div>
+              <div class="filter-option" onclick="setFilter('renewal', 'soon', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>45-75 days</div>
+              <div class="filter-option" onclick="setFilter('renewal', 'later', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>75+ days</div>
+            </div>
+          </div>
+
+          <div class="filter-pill-wrapper">
+            <div class="filter-pill" id="filter-pill-assigned" onclick="toggleDropdown('assigned', event)">
+              <span id="filter-label-assigned">Assigned: All</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="filter-dropdown" id="filter-dropdown-assigned">
+              <div class="filter-option" onclick="setFilter('assigned', 'all', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All prospects</div>
+              <div class="filter-option" onclick="setFilter('assigned', 'unassigned', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unassigned only</div>
+              <div class="filter-option" onclick="setFilter('assigned', 'assigned', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Assigned only</div>
+            </div>
+          </div>
+
+          <div class="filter-search">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="search-input" placeholder="Search by company name..." oninput="onSearchInput()" />
+          </div>
+
+          <button class="btn btn-ghost" id="clear-filters-btn" onclick="clearAllFilters()" style="display:none;font-size:12.5px;">
+            Clear filters
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <div class="table-section-header">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <h3>Hot prospects · Action this week</h3>
+            <span class="count" id="result-count">12 results</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Score</th>
+                <th>Top trigger</th>
+                <th>Renewal</th>
+                <th>Pitch angle</th>
+                <th>Assigned</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="prospect-table-body">
+              <!-- Rows injected via JS -->
+            </tbody>
+          </table>
+          <div class="empty-state" id="empty-state" style="display:none;">
+            <h3>No prospects match your filters</h3>
+            <p>Try clearing one or more filters to broaden the results.</p>
+            <button class="btn btn-secondary" onclick="clearAllFilters()">Clear all filters</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== PAGE 2: DOSSIER ============== -->
+      <div class="page" id="page-dossier">
+        <div class="dossier-header">
+          <div class="dossier-company">
+            <div class="company-logo-lg">AE</div>
+            <div>
+              <h1>Apex Engineering Ltd</h1>
+              <div class="dossier-meta-row">
+                <span class="meta-pill">Manufacturing</span>
+                <span class="meta-pill">1,401 employees</span>
+                <span class="meta-pill">Pune</span>
+                <span class="meta-pill">Private Ltd</span>
+                <span class="meta-pill" style="background:var(--green-soft);color:var(--green-dark);">CIN: U29299PN2008PLC131487</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="dossier-score-block">
+              <div class="dossier-score">88 / 100</div>
+              <div style="margin-top: 6px;">
+                <span class="badge badge-hot"><span class="badge-dot"></span>HOT</span>
+              </div>
+              <div class="dossier-score-meta">High confidence · Updated 2h ago</div>
+            </div>
+            <div class="dossier-actions">
+              <button class="btn btn-danger" onclick="openRejectModal(0)">Reject</button>
+              <button class="btn btn-secondary" onclick="toast('Snoozed for 14 days'); setTimeout(()=>navigateTo('signalBrief'), 600);">Snooze 14d</button>
+              <button class="btn btn-primary" onclick="navigateTo('outreach')">
+                Approve & Assign
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dossier-grid">
+          <div>
+            <!-- TRIGGER NARRATIVE -->
+            <div class="card">
+              <div class="card-header">
+                <svg class="icon sparkle-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg>
+                <h2>Trigger narrative</h2>
+                <span class="caption" style="margin-left: auto;">LLM-generated</span>
+              </div>
+              <p class="trigger-narrative">
+                Apex Engineering Ltd hired <strong>Rajiv Mehta as CHRO on Feb 14, 2026</strong> (from Larsen & Toubro, where he led the 2022 group benefits restructuring). The company raised <strong>₹340Cr Series C on Jan 28</strong> and has posted 7 senior HR/L&D roles in the last 30 days, signaling ~25% headcount expansion. Their current group health policy (ICICI Lombard, inferred from MCA filing) renews <strong>May 15, 2026 — 76 days out</strong>. The combination of new CHRO with benefits-overhaul precedent, funding-led headcount expansion, and renewal window proximity makes this a high-fit moment to initiate.
+              </p>
+              <div class="pitch-angle-box">
+                <div class="pitch-angle-label">Recommended pitch angle</div>
+                <div class="pitch-angle-text">
+                  Lead with the headcount-growth angle, not benefits restructuring. Mehta's L&T precedent suggests he'll be receptive to a tailored growth-stage group health package within his first 90 days. Anchor on scale-stage benefits modernization, not cost reduction.
+                </div>
+              </div>
+            </div>
+
+            <!-- EVIDENCE BY FAMILY -->
+            <div class="card">
+              <div class="card-header">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <h2>Evidence by family</h2>
+                <span class="caption" style="margin-left: auto;">7 of 8 firing · All citations sourced</span>
+              </div>
+              <div id="family-list">
+                <!-- Family rows injected -->
+              </div>
+            </div>
+
+            <!-- SCORE BREAKDOWN -->
+            <div class="card">
+              <div class="card-header">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <h2>Score breakdown · 88 / 100</h2>
+              </div>
+              <div>
+                <div class="score-bar-row">
+                  <div class="score-bar-label">Leadership</div>
+                  <div class="score-bar-track"><div class="score-bar-fill" style="width:32%"></div></div>
+                  <div class="score-bar-pct">32%</div>
+                </div>
+                <div class="score-bar-row">
+                  <div class="score-bar-label">Growth</div>
+                  <div class="score-bar-track"><div class="score-bar-fill" style="width:28%"></div></div>
+                  <div class="score-bar-pct">28%</div>
+                </div>
+                <div class="score-bar-row">
+                  <div class="score-bar-label">Temporal</div>
+                  <div class="score-bar-track"><div class="score-bar-fill" style="width:18%"></div></div>
+                  <div class="score-bar-pct">18%</div>
+                </div>
+                <div class="score-bar-row">
+                  <div class="score-bar-label">Distress</div>
+                  <div class="score-bar-track"><div class="score-bar-fill" style="width:12%"></div></div>
+                  <div class="score-bar-pct">12%</div>
+                </div>
+                <div class="score-bar-row">
+                  <div class="score-bar-label">Network</div>
+                  <div class="score-bar-track"><div class="score-bar-fill" style="width:6%"></div></div>
+                  <div class="score-bar-pct">6%</div>
+                </div>
+                <div class="score-bar-row">
+                  <div class="score-bar-label">Engagement</div>
+                  <div class="score-bar-track"><div class="score-bar-fill" style="width:3%"></div></div>
+                  <div class="score-bar-pct">3%</div>
+                </div>
+                <div class="score-bar-row">
+                  <div class="score-bar-label">Competitive</div>
+                  <div class="score-bar-track"><div class="score-bar-fill" style="width:1%"></div></div>
+                  <div class="score-bar-pct">1%</div>
+                </div>
+              </div>
+              <div class="causal-chain">
+                <strong>Causal chain detected:</strong> Leadership (CHRO playbook from L&T) → Growth (Series C funding → headcount expansion) → Temporal (renewal window in 76 days). This stacking pattern is the highest-yield combination per your firm's rubric (1.4x leadership × 1.3x growth weight).
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <!-- SUGGESTED BUYERS -->
+            <div class="card">
+              <div class="card-header">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <h2>Suggested buyers</h2>
+                <span class="caption" style="margin-left: auto;">3 identified</span>
+              </div>
+              <div class="buyer-card">
+                <div class="avatar" style="background: linear-gradient(135deg, #C084FC, #9333EA);">RM</div>
+                <div class="buyer-info">
+                  <div class="buyer-name">Rajiv Mehta</div>
+                  <div class="buyer-role">CHRO · joined Feb 14, 2026</div>
+                  <div class="buyer-reason">Primary decision-maker; signed off the L&T benefits restructuring 2022.</div>
+                  <button class="enrich-btn" id="enrich-btn-0" onclick="enrichContact(0, 'Rajiv Mehta', 'CHRO')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Get contact details
+                  </button>
+                  <div class="enriched-block" id="enriched-block-0"></div>
+                </div>
+                <div class="buyer-action" onclick="toast('Opening LinkedIn profile')">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </div>
+              </div>
+              <div class="buyer-card">
+                <div class="avatar" style="background: linear-gradient(135deg, #60A5FA, #3B82F6);">AK</div>
+                <div class="buyer-info">
+                  <div class="buyer-name">Asha Krishnan</div>
+                  <div class="buyer-role">CFO · joined Aug 2025</div>
+                  <div class="buyer-reason">Secondary buyer; D&O policy renewal also approaching (Aug 2026).</div>
+                  <button class="enrich-btn" id="enrich-btn-1" onclick="enrichContact(1, 'Asha Krishnan', 'CFO')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Get contact details
+                  </button>
+                  <div class="enriched-block" id="enriched-block-1"></div>
+                </div>
+                <div class="buyer-action" onclick="toast('Opening LinkedIn profile')">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </div>
+              </div>
+              <div class="buyer-card">
+                <div class="avatar" style="background: linear-gradient(135deg, #FCD34D, #F59E0B);">KR</div>
+                <div class="buyer-info">
+                  <div class="buyer-name">Karthik Rao</div>
+                  <div class="buyer-role">Head of Talent</div>
+                  <div class="buyer-reason">Gatekeeper; manages broker relationships day-to-day. Best for initial outreach.</div>
+                  <button class="enrich-btn" id="enrich-btn-2" onclick="enrichContact(2, 'Karthik Rao', 'Head of Talent')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Get contact details
+                  </button>
+                  <div class="enriched-block" id="enriched-block-2"></div>
+                </div>
+                <div class="buyer-action" onclick="toast('Opening LinkedIn profile')">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- CAVEATS -->
+            <div class="card caveats-card">
+              <div class="card-header">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <h2>Caveats — verify before outreach</h2>
+              </div>
+              <ul class="caveats-list">
+                <li><strong>Incumbent insurer (ICICI Lombard)</strong> is inferred from MCA AOC-4 P&L expense line items. Confirm before any competitive outreach.</li>
+                <li>Glassdoor reviews (Distress family) are anonymous; weight as directional signal only. Do not reference specific reviews in outreach.</li>
+                <li>Series C funding may include secondary capital. Verify primary capital allocation before pitching scale-related products.</li>
+                <li>Rohit Sharma's connection to Mehta is 4+ years old. Reach out to Rohit internally to validate warmth before using as referral path.</li>
+              </ul>
+            </div>
+
+            <!-- NEXT STEPS -->
+            <div class="card">
+              <div class="card-header">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                <h2>Next steps</h2>
+              </div>
+              <div style="display:flex; flex-direction:column; gap: 10px;">
+                <button class="btn btn-primary" style="justify-content:space-between;" onclick="navigateTo('outreach')">
+                  <span>Approve & assign to BD rep</span>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <button class="btn btn-secondary" style="justify-content:space-between;" onclick="navigateTo('outreach')">
+                  <span>Draft outreach across 3 channels</span>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <button class="btn btn-secondary" style="justify-content:space-between;" onclick="toast('Reminder scheduled')">
+                  <span>Schedule first-touch reminder</span>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== PAGE 3: OUTREACH ============== -->
+      <div class="page" id="page-outreach">
+        <div class="page-header">
+          <div>
+            <h1>Apex Engineering Ltd · Outreach drafts</h1>
+            <div class="subtitle">Drafts ready across 3 channels · Assigned to Priya N.</div>
+          </div>
+          <span class="badge badge-hot" style="font-size: 13px; padding: 6px 12px;"><span class="badge-dot"></span>Drafts ready · 3 channels</span>
+        </div>
+
+        <div class="context-strip">
+          <div class="icon-circle">
+            <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg>
+          </div>
+          <div class="context-strip-text">
+            <strong>Drafts informed by trigger:</strong> New CHRO with benefits-overhaul precedent (L&T 2022) + Series C funding ₹340Cr (Jan 28) + 76-day renewal window. Leading angle: scale-stage benefits modernization.
+          </div>
+          <button class="btn btn-ghost" onclick="toast('Regenerating all drafts...'); setTimeout(()=>toast('Drafts refreshed'), 1500);">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Regenerate all
+          </button>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('email')">📧 Email</div>
+          <div class="tab" onclick="switchTab('whatsapp')">💬 WhatsApp</div>
+          <div class="tab" onclick="switchTab('voice')">🎙 Voice agent brief</div>
+        </div>
+
+        <!-- EMAIL TAB -->
+        <div class="tab-content" id="tab-email">
+          <div class="outreach-grid">
+            <div class="draft-card">
+              <div class="field-row">
+                <label class="field-label">Subject</label>
+                <input class="field-input" value="Quick thought on benefits strategy during your growth phase" />
+              </div>
+              <div class="field-row">
+                <label class="field-label">To</label>
+                <input class="field-input field-readonly" value="Rajiv Mehta · rajiv.mehta@apexengineering.in" readonly />
+              </div>
+              <div class="field-row">
+                <label class="field-label">Body</label>
+                <textarea class="field-textarea">Hi Rajiv,
+
+Congrats on the move to Apex — and on the Series C close last month.
+
+I noticed the team is scaling fast (7 senior HR roles open in March alone). At L&T you ran a strong benefits restructuring in the 2022 cohort; I'd love to share how a few growth-stage manufacturers we work with are approaching group health during similar inflection points — especially with the standard renewal cycles coming up in May.
+
+Would a 20-minute conversation next week be useful?
+
+Best,
+Priya
+Insure+ Brokerage</textarea>
+              </div>
+              <div class="draft-actions">
+                <button class="btn btn-primary" onclick="toast('Email scheduled for Tue 10:30 AM IST')">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  Approve & schedule send
+                </button>
+                <button class="btn btn-secondary" onclick="toast('Draft saved')">Edit & save draft</button>
+                <button class="btn btn-ghost" onclick="toast('Regenerating draft...')">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  Regenerate
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="metadata-card">
+                <h3>
+                  <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg>
+                  Why this approach
+                </h3>
+                <ul class="metadata-list">
+                  <li>Opens with congratulations (not a sales pitch) — Mehta is 3 weeks into role</li>
+                  <li>References his L&T precedent — anchors credibility without flattery</li>
+                  <li>Mentions renewal cycle implicitly — sets context without forcing the sell</li>
+                  <li>Soft CTA — appropriate for cold first-touch to senior buyer</li>
+                </ul>
+              </div>
+              <div class="metadata-card">
+                <h3>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Suggested send time
+                </h3>
+                <div style="font-size: 14px; font-weight: 600; color: var(--slate-900); margin-bottom: 4px;">Tuesday 10:30 AM IST</div>
+                <div style="font-size: 12.5px; color: var(--slate-500);">
+                  Mehta is most LinkedIn-active 9–11 AM IST on weekday mornings (based on engagement data over last 30 days).
+                </div>
+              </div>
+              <div class="metadata-card">
+                <h3>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Deliverability check
+                </h3>
+                <ul class="metadata-list check-list">
+                  <li>Domain authentication verified (SPF + DKIM)</li>
+                  <li>Spam score: 1.2 / 10 (good)</li>
+                  <li>No spam-triggering language detected</li>
+                  <li>Sender reputation: 96 / 100</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHATSAPP TAB -->
+        <div class="tab-content" id="tab-whatsapp" style="display:none;">
+          <div class="outreach-grid">
+            <div class="draft-card">
+              <div class="field-row">
+                <label class="field-label">To</label>
+                <input class="field-input field-readonly" value="Rajiv Mehta · +91 98765 XXXXX (verified)" readonly />
+              </div>
+              <div class="field-row">
+                <label class="field-label">Message</label>
+                <div class="whatsapp-bubble" contenteditable="true">Hi Rajiv — Priya here from Insure+ Brokerage. Saw you joined Apex and the team just closed Series C — congratulations! 
+
+Working with a few growth-stage manufacturers on group health during similar phases. Open to a quick 15-min chat next week to share what's been working? 
+
+No prep needed from your side.</div>
+                <div class="char-count">412 / 1024 characters</div>
+              </div>
+              <div class="draft-actions">
+                <button class="btn btn-primary" onclick="toast('WhatsApp scheduled for Wed 7:30 PM IST')">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  Approve & schedule send
+                </button>
+                <button class="btn btn-secondary" onclick="toast('Draft saved')">Edit & save</button>
+                <button class="btn btn-ghost" onclick="toast('Regenerating...')">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  Regenerate
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="metadata-card">
+                <h3>
+                  <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg>
+                  Why this approach
+                </h3>
+                <ul class="metadata-list">
+                  <li>Shorter, more casual tone — WhatsApp norm for Indian executive comms</li>
+                  <li>Same trigger context (CHRO + Series C) — single ask, low friction</li>
+                  <li>"No prep needed" — explicit low-effort framing</li>
+                  <li>15-min ask vs. 20-min on email — channel-appropriate</li>
+                </ul>
+              </div>
+              <div class="metadata-card">
+                <h3>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Suggested send time
+                </h3>
+                <div style="font-size: 14px; font-weight: 600; color: var(--slate-900); margin-bottom: 4px;">Wednesday 7:30 PM IST</div>
+                <div style="font-size: 12.5px; color: var(--slate-500);">
+                  WhatsApp-optimal evening window for senior buyers in metros; lower distraction than mornings.
+                </div>
+              </div>
+              <div class="metadata-card">
+                <h3>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Compliance check
+                </h3>
+                <ul class="metadata-list check-list">
+                  <li>Opt-in required before send (B2B carve-out applies)</li>
+                  <li>Template approved for outbound (Gupshup business-initiated)</li>
+                  <li>DPDP basis: legitimate business purpose</li>
+                  <li>Unsubscribe path included in footer</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VOICE TAB -->
+        <div class="tab-content" id="tab-voice" style="display:none;">
+          <div class="agent-block">
+            <div class="agent-header">
+              <div class="agent-icon-circle">
+                <svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+              </div>
+              <div>
+                <h2>Voice agent: Aisha · Outbound qualifier</h2>
+                <div class="agent-meta">
+                  <strong>Voice:</strong> Aisha (female, neutral Indian English, warm tone) ·
+                  <strong>Languages:</strong> English (primary), Hindi (fallback)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="agent-block">
+            <h2 style="margin-bottom: 10px;">Opening script (first 15 seconds)</h2>
+            <div class="quote-block">
+              "Hi, am I speaking with Rajiv? This is Aisha calling from Insure+ Brokerage. I'll be brief — I noticed you recently joined Apex as CHRO, and saw the Series C announcement. Congratulations on both. I work with growth-stage manufacturers on group health strategy — is now a quick moment to talk, or would another time work better?"
+            </div>
+          </div>
+
+          <div class="agent-block">
+            <h2 style="margin-bottom: 12px;">Qualification objectives</h2>
+            <ul class="metadata-list check-list" style="font-size: 13.5px;">
+              <li>Confirm Rajiv is the decision-maker for group benefits</li>
+              <li>Validate renewal date and incumbent (ICICI Lombard inferred — confirm verbally)</li>
+              <li>Gauge interest in growth-stage benefits restructuring</li>
+              <li>Identify approximate budget timeline (pre-renewal review window)</li>
+              <li>Book a follow-up meeting if qualified (≥ 3 of 4 criteria met)</li>
+            </ul>
+          </div>
+
+          <div class="agent-block">
+            <h2 style="margin-bottom: 12px;">Likely objections & responses</h2>
+            <div class="objection-row" onclick="toggleObjection(this)">
+              <div class="objection-q">
+                <span>"We're happy with our current broker"</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="objection-a">
+                "Totally understand. Would you be open to a benchmark conversation just to compare? Many of our clients have used these as a calibration even when not switching. It typically takes 30 minutes and you get an industry-comparison report regardless of outcome."
+              </div>
+            </div>
+            <div class="objection-row" onclick="toggleObjection(this)">
+              <div class="objection-q">
+                <span>"Send me an email instead"</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="objection-a">
+                "Of course — I'll send a short note with a few growth-stage case studies in your sector. May I follow up after a week? I'll send it to your work email."
+              </div>
+            </div>
+            <div class="objection-row" onclick="toggleObjection(this)">
+              <div class="objection-q">
+                <span>"Call back next quarter"</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="objection-a">
+                "Happy to. Quick context — your renewal window opens in 76 days, so the first week of May would be a useful conversation. Should I plan for then? I want to make sure we're not catching you mid-renewal-cycle."
+              </div>
+            </div>
+            <div class="objection-row" onclick="toggleObjection(this)">
+              <div class="objection-q">
+                <span>"How did you get my number?"</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="objection-a">
+                "Your direct line is publicly listed on the Apex investor relations page. We respect contact preferences — would you like me to remove you from future outreach? Otherwise, do you have 2 minutes?"
+              </div>
+            </div>
+          </div>
+
+          <div class="agent-block">
+            <h2 style="margin-bottom: 12px;">Handoff criteria</h2>
+            <ul class="metadata-list" style="font-size: 13.5px;">
+              <li><strong>If qualified meeting booked:</strong> notify Priya N. via Slack + create Opportunity in Superleap pipeline + auto-schedule prep call brief</li>
+              <li><strong>If callback requested:</strong> schedule follow-up + log disposition</li>
+              <li><strong>If not qualified:</strong> mark lead disposition (reason captured) + schedule next-touch in 90 days based on rubric</li>
+              <li><strong>If do-not-contact requested:</strong> add to exclusion list immediately + confirm via WhatsApp</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn btn-primary" onclick="toast('Outbound call initiated by Aisha'); setTimeout(()=>navigateTo('signalBrief'), 1200);">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Launch outbound call
+            </button>
+            <button class="btn btn-secondary" onclick="toast('Brief saved')">Save brief without launching</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============== RUBRIC MODAL ============== -->
+<div class="modal-backdrop" id="rubric-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2>Your Pulse rubric</h2>
+        <div class="subtitle">Captured during AI Labs onboarding · Last reviewed: Mar 2, 2026</div>
+      </div>
+      <button class="modal-close" onclick="closeRubricModal()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="rubric-section">
+        <div class="rubric-section-title">Original description (Natural language)</div>
+        <div class="nl-description">
+          "We're a mid-tier insurance brokerage in Bangalore focused on the South India tech and manufacturing corridor. We work best with growing companies — typically 500 to 5,000 employees, post-Series B funding, where the CHRO or CFO has been in role for less than 18 months. Group health is our strongest line; D&O and commercial property are secondary. We prioritize companies in Karnataka, Tamil Nadu, Telangana, and Pune. We avoid PSUs and government-tendered accounts. Strong trigger combinations for us are: any new CHRO with a benefits-restructuring history, or a Series B/C round combined with rapid hiring. We've lost deals where renewal pricing dropped >25% — so we deprioritize prospects where the incumbent is known to be aggressively discounting. We have a strong working relationship with Plum and OneAssure alumni — leverage those network paths when they exist."
+          <div class="update-link" onclick="toast('Contact your AI Labs CSM to update')">Need to update? → Contact your AI Labs CSM</div>
+        </div>
+      </div>
+
+      <div class="rubric-section">
+        <div class="rubric-section-title">Parsed configuration (LLM-structured)</div>
+        <div class="parsed-grid">
+          <div class="parsed-card">
+            <div class="parsed-card-title">Fit Filter</div>
+            <div class="parsed-card-content">
+              <ul>
+                <li><strong>Sector:</strong> Tech, Manufacturing (priority); others (secondary)</li>
+                <li><strong>Size:</strong> 500–5,000 employees</li>
+                <li><strong>Geography:</strong> Karnataka, Tamil Nadu, Telangana, Maharashtra (Pune)</li>
+                <li><strong>Exclusions:</strong> PSU, government-tendered</li>
+              </ul>
+            </div>
+          </div>
+          <div class="parsed-card">
+            <div class="parsed-card-title">Family Weighting</div>
+            <div class="parsed-card-content">
+              <div class="weight-bar-row">
+                <span class="weight-bar-label">Leadership</span>
+                <div class="weight-bar-track"><div class="weight-bar-fill" style="width:78%"></div></div>
+                <span class="weight-bar-value">1.4×</span>
+              </div>
+              <div class="weight-bar-row">
+                <span class="weight-bar-label">Growth</span>
+                <div class="weight-bar-track"><div class="weight-bar-fill" style="width:72%"></div></div>
+                <span class="weight-bar-value">1.3×</span>
+              </div>
+              <div class="weight-bar-row">
+                <span class="weight-bar-label">Network</span>
+                <div class="weight-bar-track"><div class="weight-bar-fill" style="width:72%"></div></div>
+                <span class="weight-bar-value">1.3×</span>
+              </div>
+              <div class="weight-bar-row">
+                <span class="weight-bar-label">Temporal</span>
+                <div class="weight-bar-track"><div class="weight-bar-fill" style="width:55%"></div></div>
+                <span class="weight-bar-value">1.0×</span>
+              </div>
+              <div class="weight-bar-row">
+                <span class="weight-bar-label">Competitive</span>
+                <div class="weight-bar-track"><div class="weight-bar-fill" style="width:55%"></div></div>
+                <span class="weight-bar-value">1.0×</span>
+              </div>
+              <div class="weight-bar-row">
+                <span class="weight-bar-label">Engagement</span>
+                <div class="weight-bar-track"><div class="weight-bar-fill" style="width:55%"></div></div>
+                <span class="weight-bar-value">1.0×</span>
+              </div>
+              <div class="weight-bar-row">
+                <span class="weight-bar-label">Distress</span>
+                <div class="weight-bar-track"><div class="weight-bar-fill deprioritized" style="width:44%"></div></div>
+                <span class="weight-bar-value">0.8×</span>
+              </div>
+            </div>
+          </div>
+          <div class="parsed-card">
+            <div class="parsed-card-title">Trigger combinations (auto-elevate to Hot)</div>
+            <div class="parsed-card-content">
+              <ul>
+                <li>• New CHRO + benefits-restructuring history (LinkedIn match)</li>
+                <li>• Series B/C funding + 15%+ EPFO headcount growth in last 6 months</li>
+                <li>• Renewal &lt;90 days + new CHRO/CFO in role &lt;18 months</li>
+              </ul>
+            </div>
+          </div>
+          <div class="parsed-card">
+            <div class="parsed-card-title">Deprioritize / Exclude</div>
+            <div class="parsed-card-content">
+              <ul>
+                <li>• Incumbent known to discount &gt;25% on renewal</li>
+                <li>• PSU or government-tendered accounts (hard exclude)</li>
+                <li>• Lost-account list (24-month cooldown)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="parsed-card">
+            <div class="parsed-card-title">Product-line focus</div>
+            <div class="parsed-card-content">
+              <ul>
+                <li><strong>Primary:</strong> Group Health</li>
+                <li><strong>Secondary:</strong> D&O, Commercial Property</li>
+                <li><strong>Out of scope:</strong> Retail health, life, auto</li>
+              </ul>
+            </div>
+          </div>
+          <div class="parsed-card">
+            <div class="parsed-card-title">Network paths</div>
+            <div class="parsed-card-content">
+              <ul>
+                <li>• Alumni connections from Plum, OneAssure (boost when detected)</li>
+                <li>• Broker partner direct connections (cross-reference LinkedIn)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span class="muted" style="font-size: 12px;">Rubric is read-only in v1. Self-serve editing coming in v2.</span>
+      <button class="btn btn-secondary" onclick="closeRubricModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============== ROADMAP MODAL ============== -->
+<div class="modal-backdrop" id="roadmap-modal">
+  <div class="modal" style="max-width: 880px;">
+    <div class="modal-header">
+      <div>
+        <h2>Pulse · Product roadmap</h2>
+        <div class="subtitle">v1 ships now · v2 unlocks after 25-50 customer learning</div>
+      </div>
+      <button class="modal-close" onclick="closeRoadmapModal()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <!-- v1 section -->
+      <div class="phase-section">
+        <div class="phase-title">
+          <span class="roadmap-pill">v1 · SHIPPING</span>
+          <h3>Foundational scope (months 1-6)</h3>
+        </div>
+        <div class="phase-timeline">What you're seeing in this prototype. 10 capabilities, plus full integration with Superleap's existing CRM, Voice AI, Workflows, Engage, MCP, and AI Labs.</div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">1</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">8-family scoring framework with cross-family LLM synthesis</div>
+            <div class="v-feature-desc">Temporal, Leadership, Growth, Distress, Competitive, Fit (filter), Engagement, Network. Two-stage architecture: hard filters then multi-family scoring with stacking, causal chains, and negative-interaction detection.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">2</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Monday Pulse Brief with prospect prioritization</div>
+            <div class="v-feature-desc">Karan triages 12 hot prospects in 20 minutes vs. 12-15 hours/week today. Inline Approve/Snooze/Reject actions feed the rejection-reason learning loop.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">3</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Prospect Dossier with full citations</div>
+            <div class="v-feature-desc">Every signal cites source, timestamp, confidence, and rubric-match. "View raw evidence" drilldown surfaces the underlying source text.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">4</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Natural-language rubric (read-only in v1)</div>
+            <div class="v-feature-desc">Each broker's ICP captured during AI Labs onboarding as plain English. LLM (J5) parses into structured config. Customers view both the original NL description and the parsed structured rubric.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">5</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">On-demand multi-provider contact enrichment</div>
+            <div class="v-feature-desc">Waterfall across LinkedIn Sales Nav → Apollo → Lusha → India-context provider → Pattern inference. Provider-agnostic. Cost-transparent. Citation-attached. Triggered on click, not in bulk.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">6</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Outreach generation across Email, WhatsApp, Voice Agent Brief</div>
+            <div class="v-feature-desc">Three channels, all referencing the specific trigger context. Voice agent brief hands off to Superleap's existing SuperAgents for autonomous qualification calls.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">7</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Wednesday call-prep brief integrated with SuperAgents</div>
+            <div class="v-feature-desc">When a meeting is booked, the call brief auto-generates: refreshed trigger, 3 tailored discovery questions, objection-response pairs, competitive context.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">8</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Friday Pulse Quality Dashboard + feedback loop</div>
+            <div class="v-feature-desc">Approval rates, false-positive patterns, per-family precision. Rolls into per-broker prompt-tuning loop weekly.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">9</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Native Lead-pipeline integration</div>
+            <div class="v-feature-desc">Approved prospects create Superleap Leads with trigger context, evidence, score, and enriched contacts. Every existing Superleap module (Workflows, Engage, MCP) operates on these leads natively.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">10</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">MCP queryability</div>
+            <div class="v-feature-desc">"Show me Pulse prospects with renewal &lt;60 days" via Claude/ChatGPT/Gemini through Superleap's existing MCP layer.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v2 section -->
+      <div class="phase-section">
+        <div class="phase-title">
+          <span class="roadmap-pill v2">v2 · ROADMAP</span>
+          <h3>Phase 2 evolution (months 6-18 post-v1)</h3>
+        </div>
+        <div class="phase-timeline">Deferred deliberately. Each v2 feature unlocks after operational learning from 25-50 v1 customers. Building these before that learning would mean configuring for assumptions we haven't validated.</div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">1</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Conversational rubric refinement (J7) <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">Move from read-only to chat-based rubric editing. "Deprioritize pharma for next quarter, boost tech weighting" → LLM proposes diff + simulates impact on current prospect base before activation. <strong>Roadmap: months 6-9.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">2</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Closed-loop pricing intelligence <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">Inferred fair-price benchmark per prospect, based on similar-sized closed deals in broker's own customer base + IRDAI industry data. Triggers at Proposal stage. <strong>Roadmap: months 9-12.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">3</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Multi-policy line cross-sell intelligence <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">Detect when a prospect has triggers across multiple policy lines simultaneously (D&O + group health + cyber). Unified cross-sell brief. Increases ACV per account. <strong>Roadmap: months 6-9.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">4</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Bulk enrichment with budget guardrails <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">Pre-enrich top N likely-approved prospects. Deferred-payment model: cost commits only on approval. Per-broker monthly budget caps with 75%/90% alerts. <strong>Roadmap: months 9-12.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">5</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Self-serve enrichment provider configuration <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">Customers add/remove providers from waterfall, set confidence thresholds, set budget caps per provider, view hit rates. <strong>Roadmap: months 6-9.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">6</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Adjacent vertical templates <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">8-family framework generalizes to corporate banking (MSME lending) and asset management (corporate treasuries). Pre-configured vertical templates. ~3-month pilot per vertical. <strong>Roadmap: months 12-18.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">7</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Federated benchmarking (privacy-preserving) <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">Opt-in shared anonymized signal-conversion patterns across brokers. "Your firm's conversion at 3.1x vs. network average 4.3x." Network effect; brokers improve faster as more join. <strong>Roadmap: months 12-18.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">8</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Outbound sequence orchestration <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">Multi-touch sequences with branch logic. "No reply in 5 days → WhatsApp follow-up referencing trigger updates; no reply in 10 days → voice-agent qualifying call." LLM-orchestrated. <strong>Roadmap: months 9-12.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">9</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Account expansion intelligence <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">For won customers, flip the system: monitor for expansion triggers — new hiring, geography, leadership changes creating upsell opportunity. <strong>Roadmap: months 12-18.</strong></div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number">10</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Multilingual outreach generation <span class="roadmap-pill v2">v2</span></div>
+            <div class="v-feature-desc">Hindi, Tamil, Kannada, Telugu, Marathi, Bengali outreach. Uses Superleap's existing multilingual voice infrastructure. Critical for tier-2/3 broker expansion. <strong>Roadmap: months 6-9.</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- never section -->
+      <div class="phase-section" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+        <div class="phase-title">
+          <span class="roadmap-pill" style="background: var(--red-soft); color: var(--red-dark);">NEVER</span>
+          <h3>Explicitly out of scope, permanently</h3>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number" style="background: var(--red-soft); color: var(--red-dark);">✕</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Autonomous outreach with no human approval</div>
+            <div class="v-feature-desc">Regulatorily risky and trust-destroying. Approval is required at prospect-add and at outreach-send. Anything else is non-negotiable.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number" style="background: var(--red-soft); color: var(--red-dark);">✕</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Predictive underwriting risk scoring</div>
+            <div class="v-feature-desc">That's the insurer's job, not the broker's. Out of category scope.</div>
+          </div>
+        </div>
+        <div class="v-feature-row">
+          <div class="v-feature-number" style="background: var(--red-soft); color: var(--red-dark);">✕</div>
+          <div class="v-feature-content">
+            <div class="v-feature-title">Direct API resale of enriched contact data</div>
+            <div class="v-feature-desc">Avoids ToS violations with upstream providers; avoids becoming a regulated data broker.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <span class="muted" style="font-size: 12px;">v1 features in this prototype are fully interactive. v2 features are documented for the reviewer; not built.</span>
+      <button class="btn btn-secondary" onclick="closeRoadmapModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============== REJECT MODAL ============== -->
+<div class="modal-backdrop" id="reject-modal">
+  <div class="modal" style="max-width: 480px;">
+    <div class="modal-header">
+      <div>
+        <h2 id="reject-modal-title">Reject prospect</h2>
+        <div class="subtitle">Your reason will help the LLM improve future scoring for your firm.</div>
+      </div>
+      <button class="modal-close" onclick="closeRejectModal()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="reject-modal-body">
+      <div class="caption" style="margin-bottom: 10px;">Reason</div>
+      <div class="reject-reasons" id="reject-reasons">
+        <div class="reject-reason-option" data-reason="wrong-sector" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Wrong sector or industry
+        </div>
+        <div class="reject-reason-option" data-reason="wrong-size" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Wrong company size for our ICP
+        </div>
+        <div class="reject-reason-option" data-reason="already-lost" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Already a lost account (within 24-month cooldown)
+        </div>
+        <div class="reject-reason-option" data-reason="conflict" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Conflict of interest / existing relationship
+        </div>
+        <div class="reject-reason-option" data-reason="signal-noise" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Signal is stale or false-positive
+        </div>
+        <div class="reject-reason-option" data-reason="other" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Other (specify below)
+        </div>
+      </div>
+      <div class="caption" style="margin-bottom: 8px; margin-top: 16px;">Additional notes (optional)</div>
+      <textarea class="reject-textarea" id="reject-notes" placeholder="Anything else for the LLM to learn from..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeRejectModal()">Cancel</button>
+      <button class="btn btn-primary" id="reject-confirm-btn" onclick="confirmReject()" disabled style="opacity:0.5;">Confirm rejection</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============== TOAST ============== -->
+<div class="toast" id="toast">
+  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-message">Action completed</span>
+</div>
+
+<script>
+// ============= DATA =============
+const prospects = [
+  { name: "Apex Engineering Ltd", initials: "AE", meta: "Manufacturing · Pune", score: 88, scoreBand: "hot", trigger: "Leadership + Growth", renewal: "76 days", renewalUrgent: false, pitch: "New CHRO from L&T (benefits-overhaul history) + Series C + headcount expansion", assigned: null, isApex: true },
+  { name: "Lumora Health Systems", initials: "LH", meta: "Healthcare · Bangalore", score: 84, scoreBand: "hot", trigger: "Distress + Temporal", renewal: "42 days", renewalUrgent: false, pitch: "3 Glassdoor complaints about claims + incumbent rate hike 22% YoY + renewal approaching", assigned: null },
+  { name: "Tridyne Tech Solutions", initials: "TT", meta: "Tech · Hyderabad", score: 82, scoreBand: "hot", trigger: "Growth + Engagement", renewal: "89 days", renewalUrgent: false, pitch: "DRHP filed last month (triggers D&O) + CFO active on benefits content on LinkedIn", assigned: "Priya N." },
+  { name: "Crestline Pharma", initials: "CP", meta: "Pharma · Mumbai", score: 79, scoreBand: "hot", trigger: "Leadership + Network", renewal: "67 days", renewalUrgent: false, pitch: "New CHRO (ex-Aon client at Cipla) + warm intro path via partner Rohit", assigned: null },
+  { name: "Vanta Logistics", initials: "VL", meta: "Logistics · Gurgaon", score: 77, scoreBand: "hot", trigger: "Growth + Distress", renewal: "54 days", renewalUrgent: false, pitch: "Series B + workplace incident filing in March + hiring 40 ops roles", assigned: "Rahul K." },
+  { name: "Indus Capital Partners", initials: "IC", meta: "BFSI · Mumbai", score: 76, scoreBand: "hot", trigger: "Temporal + Competitive", renewal: "31 days", renewalUrgent: true, pitch: "Renewal imminent + incumbent broker (Marsh) lost two key partners in March", assigned: null },
+  { name: "Northpoint Realty", initials: "NR", meta: "Real Estate · Delhi", score: 74, scoreBand: "hot", trigger: "Growth + Engagement", renewal: "71 days", renewalUrgent: false, pitch: "New RERA filings for 3 commercial properties + CHRO downloaded our pricing guide", assigned: null },
+  { name: "Helix BioSciences", initials: "HB", meta: "Biotech · Bangalore", score: 73, scoreBand: "hot", trigger: "Leadership + Growth", renewal: "95 days", renewalUrgent: false, pitch: "New CFO from Biocon + EPFO headcount +34% YoY", assigned: null },
+  { name: "Brava Foods", initials: "BF", meta: "FMCG · Pune", score: 71, scoreBand: "hot", trigger: "Distress + Temporal", renewal: "38 days", renewalUrgent: false, pitch: "Glassdoor complaints + claims dispute (court record) + renewal in <60 days", assigned: "Priya N." },
+  { name: "Cygnus Auto Components", initials: "CA", meta: "Auto · Chennai", score: 69, scoreBand: "hot", trigger: "Growth + Network", renewal: "82 days", renewalUrgent: false, pitch: "New manufacturing facility opening + alumni connection to MD", assigned: null },
+  { name: "Lattice Analytics", initials: "LA", meta: "Tech · Bangalore", score: 67, scoreBand: "hot", trigger: "Growth + Engagement", renewal: "47 days", renewalUrgent: false, pitch: "₹120Cr Series C + 11 senior roles on Naukri + CHRO attended SHRM India", assigned: "Rahul K." },
+  { name: "Frontera Education", initials: "FE", meta: "Edtech · Hyderabad", score: 65, scoreBand: "hot", trigger: "Leadership + Temporal", renewal: "58 days", renewalUrgent: false, pitch: "New Head of HR Ops + renewal in 60 days + sector match", assigned: null },
+];
+
+const families = [
+  {
+    name: "Temporal",
+    firing: true,
+    signalCount: 2,
+    weight: "1.0×",
+    weightClass: "",
+    signals: [
+      {
+        title: "Group health policy renewal in 76 days",
+        source: "Broker renewal database (internal record #INS-2024-0418)",
+        detected: "Mar 1, 2026, 09:14 IST (database sync)",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "Renewal <90 days + leadership change",
+        strongMatch: false,
+        raw: `Policy ID: INS-2024-0418
+Company: Apex Engineering Ltd
+Line: Group Health
+Incumbent insurer: ICICI Lombard
+Sum insured: ₹4Cr
+Premium: ₹68L
+Renewal date: May 15, 2026
+Last renewed: May 15, 2025
+Auto-renew flag: No (manual review required)`
+      },
+      {
+        title: "Fiscal year-end vendor re-evaluation window (Mar 31, 2026)",
+        source: "Indian fiscal calendar (system-calculated)",
+        detected: "Continuous (Jan 1, 2026 onwards)",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "FY-end approaching",
+        strongMatch: false,
+        raw: `Indian FY 2025-26 ends Mar 31, 2026.
+Vendor contracts in approval cycle: Jan–Mar 2026.
+Mid-tier corporate vendor re-eval probability in this window: 62% (industry benchmark).`
+      }
+    ]
+  },
+  {
+    name: "Leadership",
+    firing: true,
+    signalCount: 3,
+    weight: "1.4× (boosted)",
+    weightClass: "",
+    signals: [
+      {
+        title: "Rajiv Mehta appointed as CHRO, joined Feb 14, 2026",
+        source: "LinkedIn profile update + MCA Form DIR-12 filing",
+        detected: "Feb 15, 2026, 06:42 IST (LinkedIn scrape via partner); cross-validated Feb 17, 2026 (MCA filing)",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "New CHRO + benefits-restructuring history (LinkedIn match)",
+        strongMatch: true,
+        raw: `LinkedIn post (Feb 14, 2026 — Apex Engineering Ltd official page):
+
+"We are thrilled to welcome Rajiv Mehta as our new Chief Human Resources Officer. Rajiv brings 22 years of experience in HR transformation, most recently at Larsen & Toubro where he led enterprise-wide benefits and total rewards strategy. We look forward to his leadership as we scale our team. Welcome to Apex, Rajiv!"
+
+MCA DIR-12 filing reference: F-DIR12-2026-0218-APX
+Date of appointment: 14/02/2026
+DIN: 02847291`
+      },
+      {
+        title: "Mehta's prior role: VP HR at L&T, led benefits restructuring in 2022",
+        source: "LinkedIn profile employment history + news archive (Economic Times, Mar 2022)",
+        detected: "Feb 15, 2026 (auto-enrichment after CHRO appointment detection)",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "Benefits-restructuring history (biographical pattern)",
+        strongMatch: true,
+        raw: `LinkedIn profile — Rajiv Mehta
+VP HR, Larsen & Toubro (Apr 2019 – Jan 2026)
+
+Highlighted experience: "Led 2022 enterprise benefits restructuring impacting 60,000+ employees including group health, group life, and OPD coverage modernization. Reduced TPA cycle time by 38% and rolled out unified benefits portal."
+
+Economic Times article (Mar 18, 2022, headline): "L&T overhauls employee benefits in major HR transformation."
+
+Pattern match: Mehta has now executed this playbook at 2 of 3 prior senior roles within 6-9 months of joining. Prior at Wipro (2017) and L&T (2022). Probability of repeating at Apex: 78% (LLM-inferred).`
+      },
+      {
+        title: "CFO change 6 months ago — Asha Krishnan from Tata Capital",
+        source: "LinkedIn profile + MCA Form DIR-12",
+        detected: "Aug 28, 2025",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "CHRO or CFO in role <18 months",
+        strongMatch: false,
+        raw: `Asha Krishnan, CFO Apex Engineering Ltd.
+Joined: Aug 22, 2025
+Prior: VP Finance, Tata Capital (3 years)
+MCA DIR-12 filing confirmed Aug 25, 2025.
+
+Cross-trigger insight: With both CHRO and CFO recently in seat, dual approval pathway is fresh — typically lowers institutional friction for vendor evaluation.`
+      }
+    ]
+  },
+  {
+    name: "Growth",
+    firing: true,
+    signalCount: 3,
+    weight: "1.3× (boosted)",
+    weightClass: "",
+    signals: [
+      {
+        title: "Series C funding round of ₹340Cr closed Jan 28, 2026",
+        source: "Inc42 news article + Apex Engineering press release + VCCircle confirmation",
+        detected: "Jan 28, 2026, 14:30 IST",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "Series B/C funding + rapid hiring",
+        strongMatch: false,
+        raw: `Inc42 (Jan 28, 2026):
+"Pune-based industrial automation firm Apex Engineering has raised ₹340 crore in a Series C round led by Premji Invest, with participation from existing investors Kalaari Capital and Stellaris Ventures. The funds will be used to expand the engineering team, build out the GCC services arm, and accelerate geographic expansion into Southeast Asia."
+
+Round details:
+- Type: Series C, primary capital
+- Amount: ₹340 crore
+- Lead investor: Premji Invest (new)
+- Valuation: ₹2,400Cr post-money
+- Use of funds: Talent expansion, GCC build-out, SEA expansion`
+      },
+      {
+        title: "EPFO headcount growth of +28% YoY",
+        source: "EPFO records via Account Aggregator (Sahamati network)",
+        detected: "Feb 22, 2026 (latest filing cycle)",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "15%+ EPFO headcount growth in last 6 months",
+        strongMatch: true,
+        raw: `EPFO Establishment Code: MH/PUN/0048291
+Monthly contribution filings — trailing 12 months:
+
+Feb 2025: 1,094 employees · ₹2.18Cr PF contributions
+Aug 2025: 1,247 employees · ₹2.49Cr
+Nov 2025: 1,338 employees · ₹2.68Cr
+Feb 2026: 1,401 employees · ₹2.81Cr
+
+Net growth: +307 employees (+28.06%) over trailing 12 months.
+Acceleration: 6-month growth rate (12.3%) higher than 12-month average — hiring is intensifying post-Series C.`
+      },
+      {
+        title: "7 senior HR/L&D roles open in last 30 days",
+        source: "Naukri job postings + LinkedIn Jobs (cross-referenced)",
+        detected: "Continuous monitoring (rolling 30-day window)",
+        confidence: "Medium",
+        confidenceClass: "medium",
+        match: "Rapid hiring signal — operational confirmation",
+        strongMatch: false,
+        raw: `Job listings (Naukri + LinkedIn, March 2026):
+
+1. Senior Manager, Total Rewards (posted Mar 4) — directly relevant
+2. L&D Lead, Engineering (posted Mar 6)
+3. HRBP, Manufacturing (posted Mar 8)
+4. Senior HR Operations Manager (posted Mar 11) — directly relevant
+5. Compensation & Benefits Specialist (posted Mar 12) — directly relevant
+6. Talent Acquisition Lead, Senior (posted Mar 14)
+7. Head of Employee Experience (posted Mar 18)
+
+Direct benefits-related hires: 3 of 7 (43%) — suggests benefits modernization is an active initiative.`
+      }
+    ]
+  },
+  {
+    name: "Distress",
+    firing: true,
+    signalCount: 1,
+    weight: "0.8× (deprioritized per rubric)",
+    weightClass: "deprioritized",
+    signals: [
+      {
+        title: "3 Glassdoor reviews flagging slow claims processing experience",
+        source: "Glassdoor monitoring (via data partner)",
+        detected: "Most recent — Mar 12, 2026",
+        confidence: "Medium",
+        confidenceClass: "medium",
+        match: "General Distress signal (deprioritized per rubric — high FP risk)",
+        strongMatch: false,
+        raw: `Glassdoor reviews of Apex Engineering Ltd (last 90 days):
+
+[Mar 12, 2026] — "Health insurance claim took 6 weeks. Useless TPA." (Engineering, current employee)
+[Feb 28, 2026] — "Claims process is a nightmare. Better to pay out of pocket." (Operations, former employee)
+[Feb 19, 2026] — "Insurance benefits page is from 2018. No portal. Have to email HR for everything." (HR, current employee)
+
+Caveat: Anonymous; treat as directional. Do not reference specifically in outreach.`
+      }
+    ]
+  },
+  {
+    name: "Competitive",
+    firing: true,
+    signalCount: 1,
+    weight: "1.0×",
+    weightClass: "",
+    signals: [
+      {
+        title: "ICICI Lombard renewal rates up 22% YoY in tech-manufacturing segment",
+        source: "IRDAI industry data + insurance broker industry reports",
+        detected: "Feb 2026 industry release",
+        confidence: "Medium",
+        confidenceClass: "medium",
+        match: "Incumbent insurer pricing trend",
+        strongMatch: false,
+        raw: `IRDAI Annual Report 2024-25 (released Feb 2026, page 147):
+
+"ICICI Lombard recorded 22.1% average renewal rate increase in the tech and manufacturing employer segment in H2 2025, driven by claims-ratio adjustments post-COVID and segment-specific risk repricing. Industry average renewal increase across all insurers for this segment: 14.3%."
+
+Inference: If Apex faces a typical ICICI renewal in May, they should expect 18-22% rate increase — meaningful wedge for a competitive alternative.`
+      }
+    ]
+  },
+  {
+    name: "Fit",
+    firing: false,
+    signalCount: 0,
+    weight: "Passed",
+    weightClass: "passed",
+    isFilter: true,
+    signals: [
+      {
+        title: "All hard-filter criteria met",
+        source: "MCA + EPFO + broker firm ICP rubric",
+        detected: "Stage A filter (pre-scoring)",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "All filter criteria",
+        strongMatch: false,
+        raw: `FIT FILTER RESULTS (Stage A — passed):
+
+✓ Sector: Manufacturing — primary sector per rubric
+✓ Size: 1,401 employees — within 500-5,000 band
+✓ Geography: Pune, Maharashtra — within rubric geography list
+✓ Ownership: Private Ltd — not PSU, not government-tendered
+✓ Cooldown: No prior contact in 24 months
+✓ Exclusion list: Not present
+✓ DPDP: B2B business-purpose contact basis available
+
+Prospect cleared Stage A filter and proceeded to Stage B (multi-family scoring).`
+      }
+    ]
+  },
+  {
+    name: "Engagement",
+    firing: true,
+    signalCount: 1,
+    weight: "1.0×",
+    weightClass: "",
+    signals: [
+      {
+        title: "Rajiv Mehta engaged with 2 Plum-Insurance LinkedIn posts in last 14 days",
+        source: "LinkedIn engagement tracking",
+        detected: "Most recent — Mar 14, 2026",
+        confidence: "Medium",
+        confidenceClass: "medium",
+        match: "Buyer engaging with category content",
+        strongMatch: false,
+        raw: `LinkedIn activity log for Rajiv Mehta (last 30 days):
+
+Mar 14, 2026: Commented "Great framework" on Plum post about growth-stage group health strategy
+Mar 9, 2026: Liked Plum post about benefits portal modernization
+Mar 4, 2026: Shared OneAssure article on benefits cost optimization
+Feb 28, 2026: Liked Mercer Marsh post about Indian healthcare cost trends
+
+Pattern: Active engagement with insurance-benefits category content within first 3 weeks of joining Apex. Strong directional signal he's actively forming opinions.`
+      }
+    ]
+  },
+  {
+    name: "Network",
+    firing: true,
+    signalCount: 1,
+    weight: "1.3× (boosted)",
+    weightClass: "",
+    signals: [
+      {
+        title: "Broker partner Rohit Sharma worked with Rajiv Mehta at L&T, 2019-2021",
+        source: "LinkedIn connection graph + broker firm's internal CRM",
+        detected: "Feb 15, 2026 (auto-enriched after Mehta detection)",
+        confidence: "High",
+        confidenceClass: "high",
+        match: "Alumni connections from broker firm partners",
+        strongMatch: true,
+        raw: `Network path detected:
+
+Your firm: Rohit Sharma, Senior Partner
+Prospect firm: Rajiv Mehta, CHRO at Apex Engineering
+
+Overlap at Larsen & Toubro (Mumbai office):
+- Rohit: Senior Consultant, HR Advisory — May 2019 to Aug 2021
+- Rajiv: Director, Total Rewards — Apr 2019 to Mar 2024
+
+Confirmed 1st-degree LinkedIn connection (mutual).
+Last interaction (LinkedIn activity): Aug 2023 (Rohit liked Rajiv's post).
+
+Warm intro path: HIGH viability. Recommend Rohit-initiated message before cold outreach.`
+      }
+    ]
+  }
+];
+
+// ============= NAVIGATION =============
+function navigateTo(pageId, fromPopstate) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  updateBreadcrumb(pageId);
+  window.scrollTo(0, 0);
+  // Push browser history so back-button works (unless we're responding to popstate itself)
+  if (!fromPopstate) {
+    try {
+      window.history.pushState({ pageId }, '', `#${pageId}`);
+    } catch(e) { /* sandboxed iframes may block this; ignore */ }
+  }
+}
+
+window.addEventListener('popstate', e => {
+  const pageId = (e.state && e.state.pageId) || 'signalBrief';
+  navigateTo(pageId, true);
+});
+
+function updateBreadcrumb(pageId) {
+  const bcEl = document.getElementById('breadcrumb');
+  if (pageId === 'signalBrief') {
+    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Pulse</span>';
+  } else if (pageId === 'dossier') {
+    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Pulse</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Apex Engineering Ltd</span>';
+  } else if (pageId === 'outreach') {
+    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Pulse</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'dossier\')">Apex Engineering Ltd</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Outreach</span>';
+  }
+}
+
+// ============= FILTERS & SEARCH STATE =============
+const filterState = {
+  sector: 'all',
+  score: 'all',
+  renewal: 'all',
+  assigned: 'all',
+  search: ''
+};
+
+// Track removed (snoozed/rejected) prospects so they don't reappear on re-render
+const removedProspects = new Set();
+
+function getUniqueSectors() {
+  const sectors = new Set();
+  prospects.forEach(p => {
+    const sector = p.meta.split(' · ')[0];
+    sectors.add(sector);
+  });
+  return Array.from(sectors).sort();
+}
+
+function populateSectorDropdown() {
+  const dropdown = document.getElementById('filter-dropdown-sector');
+  const sectors = getUniqueSectors();
+  let html = `<div class="filter-option" onclick="setFilter('sector', 'all', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All sectors</div>`;
+  sectors.forEach(s => {
+    html += `<div class="filter-option" onclick="setFilter('sector', '${s}', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>${s}</div>`;
+  });
+  dropdown.innerHTML = html;
+}
+
+function toggleDropdown(filterName, event) {
+  if (event) event.stopPropagation();
+  // Close all other dropdowns
+  document.querySelectorAll('.filter-dropdown').forEach(d => {
+    if (d.id !== `filter-dropdown-${filterName}`) d.classList.remove('shown');
+  });
+  document.querySelectorAll('.filter-pill').forEach(p => {
+    if (p.id !== `filter-pill-${filterName}` && filterState[p.id.replace('filter-pill-','')] === 'all') {
+      p.classList.remove('active');
+    }
+  });
+  const dropdown = document.getElementById(`filter-dropdown-${filterName}`);
+  dropdown.classList.toggle('shown');
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.filter-pill-wrapper')) {
+    document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('shown'));
+  }
+});
+
+function setFilter(filterName, value, event) {
+  if (event) event.stopPropagation();
+  filterState[filterName] = value;
+
+  // Update pill label
+  const labels = {
+    sector: { all: 'Sector: All' },
+    score: { all: 'Score: All', '80+': 'Score: 80+', '70-79': 'Score: 70-79', '60-69': 'Score: 60-69' },
+    renewal: { all: 'Renewal: All', urgent: 'Renewal: <45d', soon: 'Renewal: 45-75d', later: 'Renewal: 75d+' },
+    assigned: { all: 'Assigned: All', unassigned: 'Unassigned only', assigned: 'Assigned only' }
+  };
+  const pillLabel = document.getElementById(`filter-label-${filterName}`);
+  if (filterName === 'sector') {
+    pillLabel.textContent = value === 'all' ? 'Sector: All' : `Sector: ${value}`;
+  } else {
+    pillLabel.textContent = labels[filterName][value] || `${filterName}: ${value}`;
+  }
+
+  // Update active state on pill
+  const pill = document.getElementById(`filter-pill-${filterName}`);
+  if (value === 'all') pill.classList.remove('active');
+  else pill.classList.add('active');
+
+  // Update selected state on options
+  const dropdown = document.getElementById(`filter-dropdown-${filterName}`);
+  dropdown.querySelectorAll('.filter-option').forEach(opt => {
+    opt.classList.remove('selected');
+    // Match the option that has the matching value in its onclick
+    if (opt.getAttribute('onclick') && opt.getAttribute('onclick').includes(`'${value}'`)) {
+      opt.classList.add('selected');
+    }
+  });
+  dropdown.classList.remove('shown');
+
+  applyFiltersAndRender();
+}
+
+function onSearchInput() {
+  filterState.search = document.getElementById('search-input').value.trim().toLowerCase();
+  applyFiltersAndRender();
+}
+
+function clearAllFilters() {
+  filterState.sector = 'all';
+  filterState.score = 'all';
+  filterState.renewal = 'all';
+  filterState.assigned = 'all';
+  filterState.search = '';
+  document.getElementById('search-input').value = '';
+  document.getElementById('filter-label-sector').textContent = 'Sector: All';
+  document.getElementById('filter-label-score').textContent = 'Score: All';
+  document.getElementById('filter-label-renewal').textContent = 'Renewal: All';
+  document.getElementById('filter-label-assigned').textContent = 'Assigned: All';
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected'));
+  applyFiltersAndRender();
+  toast('Filters cleared');
+}
+
+function parseRenewalDays(renewalStr) {
+  const m = renewalStr.match(/(\d+)/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+function applyFilters() {
+  return prospects
+    .map((p, originalIdx) => ({ ...p, originalIdx }))
+    .filter(p => !removedProspects.has(p.originalIdx))
+    .filter(p => {
+      // Sector filter (compares against the first segment of meta string)
+      if (filterState.sector !== 'all') {
+        const sector = p.meta.split(' · ')[0];
+        if (sector !== filterState.sector) return false;
+      }
+      // Score filter
+      if (filterState.score === '80+' && p.score < 80) return false;
+      if (filterState.score === '70-79' && (p.score < 70 || p.score > 79)) return false;
+      if (filterState.score === '60-69' && (p.score < 60 || p.score > 69)) return false;
+      // Renewal filter
+      const days = parseRenewalDays(p.renewal);
+      if (filterState.renewal === 'urgent' && (days === null || days >= 45)) return false;
+      if (filterState.renewal === 'soon' && (days === null || days < 45 || days > 75)) return false;
+      if (filterState.renewal === 'later' && (days === null || days <= 75)) return false;
+      // Assigned filter
+      if (filterState.assigned === 'unassigned' && p.assigned) return false;
+      if (filterState.assigned === 'assigned' && !p.assigned) return false;
+      // Search filter
+      if (filterState.search && !p.name.toLowerCase().includes(filterState.search)) return false;
+      return true;
+    });
+}
+
+function applyFiltersAndRender() {
+  const filtered = applyFilters();
+  renderProspects(filtered);
+
+  // Update result count
+  document.getElementById('result-count').textContent = `${filtered.length} of ${prospects.length - removedProspects.size} results`;
+
+  // Show/hide empty state
+  const empty = document.getElementById('empty-state');
+  const tbody = document.getElementById('prospect-table-body');
+  if (filtered.length === 0) {
+    empty.style.display = 'block';
+    tbody.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+    tbody.style.display = '';
+  }
+
+  // Show/hide clear-filters button
+  const anyFilterActive = filterState.sector !== 'all' || filterState.score !== 'all' || filterState.renewal !== 'all' || filterState.assigned !== 'all' || filterState.search !== '';
+  document.getElementById('clear-filters-btn').style.display = anyFilterActive ? 'inline-flex' : 'none';
+}
+
+// ============= POPULATE PROSPECT TABLE =============
+function renderProspects(filteredProspects) {
+  const list = filteredProspects || prospects.map((p, i) => ({ ...p, originalIdx: i })).filter(p => !removedProspects.has(p.originalIdx));
+  const tbody = document.getElementById('prospect-table-body');
+  tbody.innerHTML = list.map((p) => `
+    <tr onclick="openDossier(${p.originalIdx}, event)" data-row-idx="${p.originalIdx}">
+      <td>
+        <div class="company-cell">
+          <div class="company-logo">${p.initials}</div>
+          <div class="company-info">
+            <div class="company-name">${p.name}</div>
+            <div class="company-meta">${p.meta}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="badge badge-hot"><span class="badge-dot"></span>${p.score} · Hot</span></td>
+      <td><span class="trigger-pill">${p.trigger}</span></td>
+      <td>${p.renewalUrgent ? `<span class="badge badge-urgent"><span class="badge-dot"></span>${p.renewal}</span>` : `<span style="font-size:13px;color:var(--slate-700);">${p.renewal}</span>`}</td>
+      <td><div class="pitch-cell">${p.pitch}</div></td>
+      <td>${p.assigned ? `<div class="assigned-cell"><div class="avatar-sm ${p.assigned.startsWith('Priya') ? '' : (p.assigned.startsWith('Rahul') ? 'blue' : 'purple')}">${p.assigned.split(' ').map(x=>x[0]).join('')}</div>${p.assigned}</div>` : '<span class="unassigned">— Unassigned</span>'}</td>
+      <td>
+        <div class="action-cell" onclick="event.stopPropagation();">
+          <button class="action-btn approve" onclick="rowAction('approve', ${p.originalIdx})" title="Approve and assign">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
+          <button class="action-btn snooze" onclick="rowAction('snooze', ${p.originalIdx})" title="Snooze for 14 days">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </button>
+          <button class="action-btn reject" onclick="rowAction('reject', ${p.originalIdx})" title="Reject with reason">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openDossier(idx, event) {
+  if (event && event.target.closest('.action-cell')) return;
+  // Only Apex (idx 0) has real dossier data; others fallback to Apex for demo
+  navigateTo('dossier');
+}
+
+function rowAction(action, idx) {
+  const prospect = prospects[idx];
+  if (!prospect) return;
+
+  if (action === 'approve') {
+    // Animate the row out and navigate to outreach for Apex; toast-only for others
+    const row = document.querySelector(`tr[data-row-idx="${idx}"]`);
+    if (row) row.classList.add('row-fading-out');
+    if (idx === 0) {
+      toast(`Approved · ${prospect.name} added to pipeline. Routing to outreach...`);
+      setTimeout(() => navigateTo('outreach'), 800);
+    } else {
+      removedProspects.add(idx);
+      setTimeout(() => {
+        applyFiltersAndRender();
+        toast(`Approved · ${prospect.name} added to pipeline, assigned to BD rep`);
+      }, 400);
+    }
+  } else if (action === 'snooze') {
+    const row = document.querySelector(`tr[data-row-idx="${idx}"]`);
+    if (row) row.classList.add('row-fading-out');
+    removedProspects.add(idx);
+    setTimeout(() => {
+      applyFiltersAndRender();
+      toast(`Snoozed for 14 days · ${prospect.name} will re-surface on Mar 31`);
+    }, 400);
+  } else if (action === 'reject') {
+    openRejectModal(idx);
+  }
+}
+
+// ============= REJECT MODAL =============
+let pendingRejectIdx = null;
+let selectedRejectReason = null;
+
+function openRejectModal(idx) {
+  pendingRejectIdx = idx;
+  selectedRejectReason = null;
+  const prospect = prospects[idx];
+  document.getElementById('reject-modal-title').textContent = `Reject ${prospect.name}`;
+  document.getElementById('reject-notes').value = '';
+  document.querySelectorAll('.reject-reason-option').forEach(o => o.classList.remove('selected'));
+  const confirmBtn = document.getElementById('reject-confirm-btn');
+  confirmBtn.disabled = true;
+  confirmBtn.style.opacity = '0.5';
+  document.getElementById('reject-modal').classList.add('active');
+}
+
+function closeRejectModal() {
+  document.getElementById('reject-modal').classList.remove('active');
+  pendingRejectIdx = null;
+  selectedRejectReason = null;
+}
+
+function selectRejectReason(el) {
+  document.querySelectorAll('.reject-reason-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedRejectReason = el.getAttribute('data-reason');
+  const confirmBtn = document.getElementById('reject-confirm-btn');
+  confirmBtn.disabled = false;
+  confirmBtn.style.opacity = '1';
+}
+
+function confirmReject() {
+  if (pendingRejectIdx === null || !selectedRejectReason) return;
+  const prospect = prospects[pendingRejectIdx];
+  const reasonLabels = {
+    'wrong-sector': 'Wrong sector',
+    'wrong-size': 'Wrong size',
+    'already-lost': 'Already-lost account',
+    'conflict': 'Conflict of interest',
+    'signal-noise': 'Stale/false signal',
+    'other': 'Other'
+  };
+  const reasonLabel = reasonLabels[selectedRejectReason] || selectedRejectReason;
+  removedProspects.add(pendingRejectIdx);
+  closeRejectModal();
+  applyFiltersAndRender();
+  toast(`Rejected · ${prospect.name} (${reasonLabel}) — LLM will adjust scoring`);
+}
+
+document.getElementById('reject-modal').addEventListener('click', e => {
+  if (e.target.id === 'reject-modal') closeRejectModal();
+});
+
+// ============= POPULATE FAMILY LIST =============
+function renderFamilies() {
+  const container = document.getElementById('family-list');
+  container.innerHTML = families.map((f, idx) => `
+    <div class="family-row ${idx < 4 ? 'expanded' : ''}" id="family-${idx}">
+      <div class="family-header ${f.firing ? 'firing' : ''}" onclick="toggleFamily(${idx})">
+        <div class="family-status-dot ${f.firing ? 'firing' : ''}"></div>
+        <div class="family-name ${f.firing ? 'firing' : ''}">${f.name}</div>
+        <div class="family-meta">
+          <span class="family-signal-count">${f.isFilter ? 'Stage A filter' : (f.signalCount + ' signal' + (f.signalCount === 1 ? '' : 's'))}</span>
+          <span class="family-weight-pill ${f.weightClass}">${f.weight}</span>
+          <svg class="icon family-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="family-body">
+        ${f.signals.map((s, sidx) => `
+          <div class="signal-card" id="signal-${idx}-${sidx}">
+            <div class="signal-title">${s.title}</div>
+            <div class="signal-row"><span class="signal-row-label">Source</span><span class="signal-row-value"><span class="source-link">${s.source}</span></span></div>
+            <div class="signal-row"><span class="signal-row-label">Detected</span><span class="signal-row-value">${s.detected}</span></div>
+            <div class="signal-row"><span class="signal-row-label">Confidence</span><span class="signal-row-value"><span class="confidence-pill confidence-${s.confidenceClass}">${s.confidence}</span></span></div>
+            <div class="signal-row match">
+              <span class="signal-row-label">Rubric match</span>
+              <span class="signal-row-value">${s.match}${s.strongMatch ? '<span class="strong-match">STRONG MATCH</span>' : ''}</span>
+            </div>
+            <div class="raw-toggle" onclick="toggleRaw(${idx}, ${sidx})">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              View raw evidence
+            </div>
+            <div class="raw-evidence" id="raw-${idx}-${sidx}">${s.raw}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleFamily(idx) {
+  document.getElementById('family-' + idx).classList.toggle('expanded');
+}
+
+function toggleRaw(fIdx, sIdx) {
+  const evidence = document.getElementById(`raw-${fIdx}-${sIdx}`);
+  const card = document.getElementById(`signal-${fIdx}-${sIdx}`);
+  evidence.classList.toggle('shown');
+  card.classList.toggle('raw-shown');
+}
+
+// ============= MODAL =============
+function openRubricModal() {
+  document.getElementById('rubric-modal').classList.add('active');
+}
+function closeRubricModal() {
+  document.getElementById('rubric-modal').classList.remove('active');
+}
+document.getElementById('rubric-modal').addEventListener('click', e => {
+  if (e.target.id === 'rubric-modal') closeRubricModal();
+});
+
+function openRoadmapModal() {
+  document.getElementById('roadmap-modal').classList.add('active');
+}
+function closeRoadmapModal() {
+  document.getElementById('roadmap-modal').classList.remove('active');
+}
+document.getElementById('roadmap-modal').addEventListener('click', e => {
+  if (e.target.id === 'roadmap-modal') closeRoadmapModal();
+});
+
+// ============= TABS =============
+function switchTab(tabName) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tabName).style.display = 'block';
+}
+
+// ============= OBJECTION ACCORDION =============
+function toggleObjection(el) {
+  el.classList.toggle('open');
+}
+
+// ============= TOAST =============
+let toastTimeout;
+function toast(msg) {
+  clearTimeout(toastTimeout);
+  document.getElementById('toast-message').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('shown');
+  toastTimeout = setTimeout(() => t.classList.remove('shown'), 2400);
+}
+
+// ============= ENRICHMENT WATERFALL =============
+const enrichmentData = {
+  0: {
+    name: "Rajiv Mehta",
+    email: "rajiv.mehta@apexengineering.in",
+    deliverability: "98% (verified)",
+    workPhone: "+91 20 6712 4400 ext. 1024",
+    mobile: "+91 98XXXXX042 (DPDP business-purpose basis)",
+    linkedin: "linkedin.com/in/rajivmehta-chro",
+    waterfall: [
+      { provider: "LinkedIn Sales Nav", result: "miss", reason: "Profile exists but no contact info exposed" },
+      { provider: "Apollo.io", result: "hit", confidence: "High", cost: "₹4.20" }
+    ],
+    provider: "Apollo.io",
+    confidence: "High",
+    verifiedAt: "Mar 14, 2026",
+    cost: "₹4.20 in credits"
+  },
+  1: {
+    name: "Asha Krishnan",
+    email: "asha.krishnan@apexengineering.in",
+    deliverability: "94% (verified)",
+    workPhone: "+91 20 6712 4400 ext. 1102",
+    mobile: "Not available",
+    linkedin: "linkedin.com/in/ashakrishnan-cfo",
+    waterfall: [
+      { provider: "LinkedIn Sales Nav", result: "hit", confidence: "High", cost: "₹2.80" }
+    ],
+    provider: "LinkedIn Sales Nav",
+    confidence: "High",
+    verifiedAt: "Mar 14, 2026",
+    cost: "₹2.80 in credits"
+  },
+  2: {
+    name: "Karthik Rao",
+    email: "karthik.rao@apexengineering.in",
+    deliverability: "76% (pattern-inferred)",
+    workPhone: "Not available",
+    mobile: "Not available",
+    linkedin: "linkedin.com/in/karthikrao-talent",
+    waterfall: [
+      { provider: "LinkedIn Sales Nav", result: "miss", reason: "No work email exposed" },
+      { provider: "Apollo.io", result: "miss", reason: "Profile not indexed" },
+      { provider: "Lusha", result: "miss", reason: "No match above confidence threshold" },
+      { provider: "Email pattern + MX verify", result: "hit", confidence: "Medium", cost: "₹0.50" }
+    ],
+    provider: "Pattern inference + MX verification",
+    confidence: "Medium",
+    verifiedAt: "Mar 14, 2026",
+    cost: "₹0.50 in credits"
+  }
+};
+
+function enrichContact(idx, name, role) {
+  const btn = document.getElementById('enrich-btn-' + idx);
+  const block = document.getElementById('enriched-block-' + idx);
+
+  btn.classList.add('loading');
+  btn.disabled = true;
+  btn.innerHTML = `
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+    Running waterfall enrichment...
+  `;
+
+  toast(`Enriching ${name} · cascading across providers...`);
+
+  setTimeout(() => {
+    const data = enrichmentData[idx];
+
+    const waterfallHTML = data.waterfall.map(step => {
+      if (step.result === 'hit') {
+        return `<div class="waterfall-step hit">→ ${step.provider}: ✓ HIT (${step.confidence}, ${step.cost})</div>`;
+      } else {
+        return `<div class="waterfall-step miss">→ ${step.provider}: ✗ ${step.reason}</div>`;
+      }
+    }).join('');
+
+    const mobileLine = data.mobile === "Not available"
+      ? `<div class="enriched-field" style="color:var(--slate-400);"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>Mobile not available across providers</span></div>`
+      : `<div class="enriched-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="enriched-field-value">${data.mobile}</span></div>`;
+
+    const workPhoneLine = data.workPhone === "Not available"
+      ? `<div class="enriched-field" style="color:var(--slate-400);"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg><span>Work phone not available</span></div>`
+      : `<div class="enriched-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg><span class="enriched-field-value">${data.workPhone}</span></div>`;
+
+    const confClass = data.confidence === "High" ? "confidence-high" : (data.confidence === "Medium" ? "confidence-medium" : "confidence-low");
+
+    block.innerHTML = `
+      <div class="enriched-field">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span class="enriched-field-value">${data.email}</span>
+        <span class="confidence-pill ${confClass}" style="margin-left:auto;">${data.deliverability}</span>
+      </div>
+      ${workPhoneLine}
+      ${mobileLine}
+      <div class="enriched-field">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        <span class="enriched-field-value">${data.linkedin}</span>
+      </div>
+
+      <div class="waterfall-trace">
+        <div style="font-size:10.5px;color:var(--slate-500);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px;">Waterfall trace</div>
+        ${waterfallHTML}
+      </div>
+
+      <div class="enriched-meta">
+        <span>
+          <span class="provider-pill">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:10px;height:10px;"><polyline points="20 6 9 17 4 12"/></svg>
+            ${data.provider}
+          </span>
+          Verified ${data.verifiedAt}
+        </span>
+        <span style="font-weight:500;">${data.cost}</span>
+      </div>
+    `;
+    block.classList.add('shown');
+
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    btn.style.display = 'none';
+
+    toast(`✓ ${name} enriched · written to Contact record · ${data.cost}`);
+  }, 1500);
+}
+
+// ============= INIT =============
+populateSectorDropdown();
+applyFiltersAndRender();
+renderFamilies();
+
+// If URL has a hash, navigate to that page (supports refresh/direct link)
+(function handleInitialHash() {
+  const hash = window.location.hash.replace('#', '');
+  const validPages = ['signalBrief', 'dossier', 'outreach'];
+  if (hash && validPages.includes(hash)) {
+    navigateTo(hash, true);
+  } else {
+    // Set initial state so the first back press doesn't leave the app
+    try { window.history.replaceState({ pageId: 'signalBrief' }, '', '#signalBrief'); } catch(e) {}
+  }
+})();
+</script>
+
+</body>
+</html>
