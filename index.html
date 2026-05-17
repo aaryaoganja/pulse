@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Superleap · Signal Hunter</title>
+<title>Superleap · Pulse</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1261,6 +1261,157 @@ tbody tr:hover { background: var(--bg-hover); }
 }
 .toast .icon { width: 16px; height: 16px; color: var(--green-primary); }
 
+/* ============= FUNCTIONAL FILTER DROPDOWNS ============= */
+.filter-pill-wrapper {
+  position: relative;
+}
+.filter-pill.active {
+  background: var(--green-soft);
+  color: var(--green-dark);
+  border-color: var(--green-primary);
+}
+.filter-pill.active .chevron { color: var(--green-dark); }
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+  padding: 6px;
+}
+.filter-dropdown.shown { display: block; }
+.filter-option {
+  padding: 8px 12px;
+  font-size: 13.5px;
+  color: var(--slate-700);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.filter-option:hover { background: var(--bg-section); }
+.filter-option.selected {
+  color: var(--green-dark);
+  font-weight: 500;
+}
+.filter-option .check {
+  width: 14px;
+  height: 14px;
+  color: var(--green-primary);
+  opacity: 0;
+  flex-shrink: 0;
+}
+.filter-option.selected .check { opacity: 1; }
+.filter-clear-row {
+  border-top: 1px solid var(--border-light);
+  margin-top: 4px;
+  padding-top: 4px;
+}
+.filter-clear-row .filter-option {
+  font-size: 12px;
+  color: var(--slate-500);
+}
+
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--slate-500);
+}
+.empty-state h3 {
+  font-size: 15px;
+  color: var(--slate-700);
+  margin-bottom: 6px;
+}
+.empty-state p {
+  font-size: 13.5px;
+  margin-bottom: 16px;
+}
+
+.row-fading-out {
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  transform: translateX(20px);
+}
+
+/* ============= REJECT MODAL ============= */
+.reject-modal-body {
+  padding: 20px 24px;
+}
+.reject-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.reject-reason-option {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 13.5px;
+  color: var(--slate-700);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.15s;
+}
+.reject-reason-option:hover {
+  border-color: var(--green-primary);
+  background: var(--bg-section);
+}
+.reject-reason-option.selected {
+  border-color: var(--green-primary);
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-weight: 500;
+}
+.reject-reason-icon {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--slate-300);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+}
+.reject-reason-option.selected .reject-reason-icon {
+  border-color: var(--green-primary);
+  background: var(--green-primary);
+}
+.reject-reason-option.selected .reject-reason-icon::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: white;
+  border-radius: 50%;
+}
+.reject-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-app);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--slate-900);
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 80px;
+}
+.reject-textarea:focus {
+  outline: none;
+  border-color: var(--green-primary);
+  background: white;
+}
+
+/* ============= FUNCTIONAL FILTER DROPDOWNS END ============= */
+
 /* ============= V1/V2 ROADMAP MODAL ============= */
 .roadmap-pill {
   display: inline-flex;
@@ -1455,7 +1606,7 @@ tbody tr:hover { background: var(--bg-hover); }
       </div>
       <div class="nav-item active" onclick="navigateTo('signalBrief')">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
-        Signal Hunter
+        Pulse
         <span class="new-pill">NEW</span>
       </div>
       <div class="nav-item" onclick="toast('Leads module')">
@@ -1512,7 +1663,7 @@ tbody tr:hover { background: var(--bg-hover); }
     <div class="topbar" id="breadcrumb">
       <span class="breadcrumb-link" onclick="navigateTo('signalBrief')">Home</span>
       <span class="breadcrumb-sep">/</span>
-      <span class="breadcrumb-current" id="breadcrumb-current">Signal Hunter</span>
+      <span class="breadcrumb-current" id="breadcrumb-current">Pulse</span>
     </div>
 
     <div class="content">
@@ -1521,7 +1672,7 @@ tbody tr:hover { background: var(--bg-hover); }
       <div class="page active" id="page-signalBrief">
         <div class="page-header">
           <div>
-            <h1>Signal Brief</h1>
+            <h1>Pulse Brief</h1>
             <div class="subtitle">Saturday, May 16, 2026 · 12 hot prospects this week</div>
           </div>
           <div class="page-actions">
@@ -1556,33 +1707,69 @@ tbody tr:hover { background: var(--bg-hover); }
         </div>
 
         <div class="filter-bar">
-          <div class="filter-pill" onclick="toast('Filter: Sector')">
-            Sector: All
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="filter-pill-wrapper">
+            <div class="filter-pill" id="filter-pill-sector" onclick="toggleDropdown('sector', event)">
+              <span id="filter-label-sector">Sector: All</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="filter-dropdown" id="filter-dropdown-sector">
+              <!-- Options populated by JS -->
+            </div>
           </div>
-          <div class="filter-pill" onclick="toast('Filter: Score')">
-            Score: All
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+
+          <div class="filter-pill-wrapper">
+            <div class="filter-pill" id="filter-pill-score" onclick="toggleDropdown('score', event)">
+              <span id="filter-label-score">Score: All</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="filter-dropdown" id="filter-dropdown-score">
+              <div class="filter-option" onclick="setFilter('score', 'all', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All scores</div>
+              <div class="filter-option" onclick="setFilter('score', '80+', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>80+ (top tier)</div>
+              <div class="filter-option" onclick="setFilter('score', '70-79', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>70-79</div>
+              <div class="filter-option" onclick="setFilter('score', '60-69', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>60-69</div>
+            </div>
           </div>
-          <div class="filter-pill" onclick="toast('Filter: Renewal window')">
-            Renewal window: All
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+
+          <div class="filter-pill-wrapper">
+            <div class="filter-pill" id="filter-pill-renewal" onclick="toggleDropdown('renewal', event)">
+              <span id="filter-label-renewal">Renewal: All</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="filter-dropdown" id="filter-dropdown-renewal">
+              <div class="filter-option" onclick="setFilter('renewal', 'all', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All renewals</div>
+              <div class="filter-option" onclick="setFilter('renewal', 'urgent', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>&lt; 45 days (urgent)</div>
+              <div class="filter-option" onclick="setFilter('renewal', 'soon', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>45-75 days</div>
+              <div class="filter-option" onclick="setFilter('renewal', 'later', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>75+ days</div>
+            </div>
           </div>
-          <div class="filter-pill" onclick="toast('Filter: Family')">
-            Family: All
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+
+          <div class="filter-pill-wrapper">
+            <div class="filter-pill" id="filter-pill-assigned" onclick="toggleDropdown('assigned', event)">
+              <span id="filter-label-assigned">Assigned: All</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="filter-dropdown" id="filter-dropdown-assigned">
+              <div class="filter-option" onclick="setFilter('assigned', 'all', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All prospects</div>
+              <div class="filter-option" onclick="setFilter('assigned', 'unassigned', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unassigned only</div>
+              <div class="filter-option" onclick="setFilter('assigned', 'assigned', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Assigned only</div>
+            </div>
           </div>
+
           <div class="filter-search">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" placeholder="Search prospects..." />
+            <input type="text" id="search-input" placeholder="Search by company name..." oninput="onSearchInput()" />
           </div>
+
+          <button class="btn btn-ghost" id="clear-filters-btn" onclick="clearAllFilters()" style="display:none;font-size:12.5px;">
+            Clear filters
+          </button>
         </div>
 
         <div class="table-wrapper">
           <div class="table-section-header">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             <h3>Hot prospects · Action this week</h3>
-            <span class="count">12 results</span>
+            <span class="count" id="result-count">12 results</span>
           </div>
           <table>
             <thead>
@@ -1600,6 +1787,11 @@ tbody tr:hover { background: var(--bg-hover); }
               <!-- Rows injected via JS -->
             </tbody>
           </table>
+          <div class="empty-state" id="empty-state" style="display:none;">
+            <h3>No prospects match your filters</h3>
+            <p>Try clearing one or more filters to broaden the results.</p>
+            <button class="btn btn-secondary" onclick="clearAllFilters()">Clear all filters</button>
+          </div>
         </div>
       </div>
 
@@ -1628,7 +1820,7 @@ tbody tr:hover { background: var(--bg-hover); }
               <div class="dossier-score-meta">High confidence · Updated 2h ago</div>
             </div>
             <div class="dossier-actions">
-              <button class="btn btn-danger" onclick="rejectProspect()">Reject</button>
+              <button class="btn btn-danger" onclick="openRejectModal(0)">Reject</button>
               <button class="btn btn-secondary" onclick="toast('Snoozed for 14 days'); setTimeout(()=>navigateTo('signalBrief'), 600);">Snooze 14d</button>
               <button class="btn btn-primary" onclick="navigateTo('outreach')">
                 Approve & Assign
@@ -2096,7 +2288,7 @@ No prep needed from your side.</div>
   <div class="modal">
     <div class="modal-header">
       <div>
-        <h2>Your Signal Hunter rubric</h2>
+        <h2>Your Pulse rubric</h2>
         <div class="subtitle">Captured during AI Labs onboarding · Last reviewed: Mar 2, 2026</div>
       </div>
       <button class="modal-close" onclick="closeRubricModal()">
@@ -2220,7 +2412,7 @@ No prep needed from your side.</div>
   <div class="modal" style="max-width: 880px;">
     <div class="modal-header">
       <div>
-        <h2>Signal Hunter · Product roadmap</h2>
+        <h2>Pulse · Product roadmap</h2>
         <div class="subtitle">v1 ships now · v2 unlocks after 25-50 customer learning</div>
       </div>
       <button class="modal-close" onclick="closeRoadmapModal()">
@@ -2246,7 +2438,7 @@ No prep needed from your side.</div>
         <div class="v-feature-row">
           <div class="v-feature-number">2</div>
           <div class="v-feature-content">
-            <div class="v-feature-title">Monday Signal Brief with prospect prioritization</div>
+            <div class="v-feature-title">Monday Pulse Brief with prospect prioritization</div>
             <div class="v-feature-desc">Karan triages 12 hot prospects in 20 minutes vs. 12-15 hours/week today. Inline Approve/Snooze/Reject actions feed the rejection-reason learning loop.</div>
           </div>
         </div>
@@ -2288,7 +2480,7 @@ No prep needed from your side.</div>
         <div class="v-feature-row">
           <div class="v-feature-number">8</div>
           <div class="v-feature-content">
-            <div class="v-feature-title">Friday Signal Quality Dashboard + feedback loop</div>
+            <div class="v-feature-title">Friday Pulse Quality Dashboard + feedback loop</div>
             <div class="v-feature-desc">Approval rates, false-positive patterns, per-family precision. Rolls into per-broker prompt-tuning loop weekly.</div>
           </div>
         </div>
@@ -2303,7 +2495,7 @@ No prep needed from your side.</div>
           <div class="v-feature-number">10</div>
           <div class="v-feature-content">
             <div class="v-feature-title">MCP queryability</div>
-            <div class="v-feature-desc">"Show me Signal Hunter prospects with renewal &lt;60 days" via Claude/ChatGPT/Gemini through Superleap's existing MCP layer.</div>
+            <div class="v-feature-desc">"Show me Pulse prospects with renewal &lt;60 days" via Claude/ChatGPT/Gemini through Superleap's existing MCP layer.</div>
           </div>
         </div>
       </div>
@@ -2420,6 +2612,56 @@ No prep needed from your side.</div>
     <div class="modal-footer">
       <span class="muted" style="font-size: 12px;">v1 features in this prototype are fully interactive. v2 features are documented for the reviewer; not built.</span>
       <button class="btn btn-secondary" onclick="closeRoadmapModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============== REJECT MODAL ============== -->
+<div class="modal-backdrop" id="reject-modal">
+  <div class="modal" style="max-width: 480px;">
+    <div class="modal-header">
+      <div>
+        <h2 id="reject-modal-title">Reject prospect</h2>
+        <div class="subtitle">Your reason will help the LLM improve future scoring for your firm.</div>
+      </div>
+      <button class="modal-close" onclick="closeRejectModal()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="reject-modal-body">
+      <div class="caption" style="margin-bottom: 10px;">Reason</div>
+      <div class="reject-reasons" id="reject-reasons">
+        <div class="reject-reason-option" data-reason="wrong-sector" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Wrong sector or industry
+        </div>
+        <div class="reject-reason-option" data-reason="wrong-size" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Wrong company size for our ICP
+        </div>
+        <div class="reject-reason-option" data-reason="already-lost" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Already a lost account (within 24-month cooldown)
+        </div>
+        <div class="reject-reason-option" data-reason="conflict" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Conflict of interest / existing relationship
+        </div>
+        <div class="reject-reason-option" data-reason="signal-noise" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Signal is stale or false-positive
+        </div>
+        <div class="reject-reason-option" data-reason="other" onclick="selectRejectReason(this)">
+          <div class="reject-reason-icon"></div>
+          Other (specify below)
+        </div>
+      </div>
+      <div class="caption" style="margin-bottom: 8px; margin-top: 16px;">Additional notes (optional)</div>
+      <textarea class="reject-textarea" id="reject-notes" placeholder="Anything else for the LLM to learn from..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeRejectModal()">Cancel</button>
+      <button class="btn btn-primary" id="reject-confirm-btn" onclick="confirmReject()" disabled style="opacity:0.5;">Confirm rejection</button>
     </div>
   </div>
 </div>
@@ -2748,29 +2990,209 @@ Warm intro path: HIGH viability. Recommend Rohit-initiated message before cold o
 ];
 
 // ============= NAVIGATION =============
-function navigateTo(pageId) {
+function navigateTo(pageId, fromPopstate) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + pageId).classList.add('active');
   updateBreadcrumb(pageId);
   window.scrollTo(0, 0);
+  // Push browser history so back-button works (unless we're responding to popstate itself)
+  if (!fromPopstate) {
+    try {
+      window.history.pushState({ pageId }, '', `#${pageId}`);
+    } catch(e) { /* sandboxed iframes may block this; ignore */ }
+  }
 }
+
+window.addEventListener('popstate', e => {
+  const pageId = (e.state && e.state.pageId) || 'signalBrief';
+  navigateTo(pageId, true);
+});
 
 function updateBreadcrumb(pageId) {
   const bcEl = document.getElementById('breadcrumb');
   if (pageId === 'signalBrief') {
-    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Signal Hunter</span>';
+    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Pulse</span>';
   } else if (pageId === 'dossier') {
-    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Signal Hunter</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Apex Engineering Ltd</span>';
+    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Pulse</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Apex Engineering Ltd</span>';
   } else if (pageId === 'outreach') {
-    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Signal Hunter</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'dossier\')">Apex Engineering Ltd</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Outreach</span>';
+    bcEl.innerHTML = '<span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Home</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'signalBrief\')">Pulse</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-link" onclick="navigateTo(\'dossier\')">Apex Engineering Ltd</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Outreach</span>';
   }
 }
 
-// ============= POPULATE PROSPECT TABLE =============
-function renderProspects() {
+// ============= FILTERS & SEARCH STATE =============
+const filterState = {
+  sector: 'all',
+  score: 'all',
+  renewal: 'all',
+  assigned: 'all',
+  search: ''
+};
+
+// Track removed (snoozed/rejected) prospects so they don't reappear on re-render
+const removedProspects = new Set();
+
+function getUniqueSectors() {
+  const sectors = new Set();
+  prospects.forEach(p => {
+    const sector = p.meta.split(' · ')[0];
+    sectors.add(sector);
+  });
+  return Array.from(sectors).sort();
+}
+
+function populateSectorDropdown() {
+  const dropdown = document.getElementById('filter-dropdown-sector');
+  const sectors = getUniqueSectors();
+  let html = `<div class="filter-option" onclick="setFilter('sector', 'all', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All sectors</div>`;
+  sectors.forEach(s => {
+    html += `<div class="filter-option" onclick="setFilter('sector', '${s}', event)"><svg class="icon check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>${s}</div>`;
+  });
+  dropdown.innerHTML = html;
+}
+
+function toggleDropdown(filterName, event) {
+  if (event) event.stopPropagation();
+  // Close all other dropdowns
+  document.querySelectorAll('.filter-dropdown').forEach(d => {
+    if (d.id !== `filter-dropdown-${filterName}`) d.classList.remove('shown');
+  });
+  document.querySelectorAll('.filter-pill').forEach(p => {
+    if (p.id !== `filter-pill-${filterName}` && filterState[p.id.replace('filter-pill-','')] === 'all') {
+      p.classList.remove('active');
+    }
+  });
+  const dropdown = document.getElementById(`filter-dropdown-${filterName}`);
+  dropdown.classList.toggle('shown');
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.filter-pill-wrapper')) {
+    document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('shown'));
+  }
+});
+
+function setFilter(filterName, value, event) {
+  if (event) event.stopPropagation();
+  filterState[filterName] = value;
+
+  // Update pill label
+  const labels = {
+    sector: { all: 'Sector: All' },
+    score: { all: 'Score: All', '80+': 'Score: 80+', '70-79': 'Score: 70-79', '60-69': 'Score: 60-69' },
+    renewal: { all: 'Renewal: All', urgent: 'Renewal: <45d', soon: 'Renewal: 45-75d', later: 'Renewal: 75d+' },
+    assigned: { all: 'Assigned: All', unassigned: 'Unassigned only', assigned: 'Assigned only' }
+  };
+  const pillLabel = document.getElementById(`filter-label-${filterName}`);
+  if (filterName === 'sector') {
+    pillLabel.textContent = value === 'all' ? 'Sector: All' : `Sector: ${value}`;
+  } else {
+    pillLabel.textContent = labels[filterName][value] || `${filterName}: ${value}`;
+  }
+
+  // Update active state on pill
+  const pill = document.getElementById(`filter-pill-${filterName}`);
+  if (value === 'all') pill.classList.remove('active');
+  else pill.classList.add('active');
+
+  // Update selected state on options
+  const dropdown = document.getElementById(`filter-dropdown-${filterName}`);
+  dropdown.querySelectorAll('.filter-option').forEach(opt => {
+    opt.classList.remove('selected');
+    // Match the option that has the matching value in its onclick
+    if (opt.getAttribute('onclick') && opt.getAttribute('onclick').includes(`'${value}'`)) {
+      opt.classList.add('selected');
+    }
+  });
+  dropdown.classList.remove('shown');
+
+  applyFiltersAndRender();
+}
+
+function onSearchInput() {
+  filterState.search = document.getElementById('search-input').value.trim().toLowerCase();
+  applyFiltersAndRender();
+}
+
+function clearAllFilters() {
+  filterState.sector = 'all';
+  filterState.score = 'all';
+  filterState.renewal = 'all';
+  filterState.assigned = 'all';
+  filterState.search = '';
+  document.getElementById('search-input').value = '';
+  document.getElementById('filter-label-sector').textContent = 'Sector: All';
+  document.getElementById('filter-label-score').textContent = 'Score: All';
+  document.getElementById('filter-label-renewal').textContent = 'Renewal: All';
+  document.getElementById('filter-label-assigned').textContent = 'Assigned: All';
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected'));
+  applyFiltersAndRender();
+  toast('Filters cleared');
+}
+
+function parseRenewalDays(renewalStr) {
+  const m = renewalStr.match(/(\d+)/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+function applyFilters() {
+  return prospects
+    .map((p, originalIdx) => ({ ...p, originalIdx }))
+    .filter(p => !removedProspects.has(p.originalIdx))
+    .filter(p => {
+      // Sector filter (compares against the first segment of meta string)
+      if (filterState.sector !== 'all') {
+        const sector = p.meta.split(' · ')[0];
+        if (sector !== filterState.sector) return false;
+      }
+      // Score filter
+      if (filterState.score === '80+' && p.score < 80) return false;
+      if (filterState.score === '70-79' && (p.score < 70 || p.score > 79)) return false;
+      if (filterState.score === '60-69' && (p.score < 60 || p.score > 69)) return false;
+      // Renewal filter
+      const days = parseRenewalDays(p.renewal);
+      if (filterState.renewal === 'urgent' && (days === null || days >= 45)) return false;
+      if (filterState.renewal === 'soon' && (days === null || days < 45 || days > 75)) return false;
+      if (filterState.renewal === 'later' && (days === null || days <= 75)) return false;
+      // Assigned filter
+      if (filterState.assigned === 'unassigned' && p.assigned) return false;
+      if (filterState.assigned === 'assigned' && !p.assigned) return false;
+      // Search filter
+      if (filterState.search && !p.name.toLowerCase().includes(filterState.search)) return false;
+      return true;
+    });
+}
+
+function applyFiltersAndRender() {
+  const filtered = applyFilters();
+  renderProspects(filtered);
+
+  // Update result count
+  document.getElementById('result-count').textContent = `${filtered.length} of ${prospects.length - removedProspects.size} results`;
+
+  // Show/hide empty state
+  const empty = document.getElementById('empty-state');
   const tbody = document.getElementById('prospect-table-body');
-  tbody.innerHTML = prospects.map((p, idx) => `
-    <tr onclick="openDossier(${idx}, event)">
+  if (filtered.length === 0) {
+    empty.style.display = 'block';
+    tbody.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+    tbody.style.display = '';
+  }
+
+  // Show/hide clear-filters button
+  const anyFilterActive = filterState.sector !== 'all' || filterState.score !== 'all' || filterState.renewal !== 'all' || filterState.assigned !== 'all' || filterState.search !== '';
+  document.getElementById('clear-filters-btn').style.display = anyFilterActive ? 'inline-flex' : 'none';
+}
+
+// ============= POPULATE PROSPECT TABLE =============
+function renderProspects(filteredProspects) {
+  const list = filteredProspects || prospects.map((p, i) => ({ ...p, originalIdx: i })).filter(p => !removedProspects.has(p.originalIdx));
+  const tbody = document.getElementById('prospect-table-body');
+  tbody.innerHTML = list.map((p) => `
+    <tr onclick="openDossier(${p.originalIdx}, event)" data-row-idx="${p.originalIdx}">
       <td>
         <div class="company-cell">
           <div class="company-logo">${p.initials}</div>
@@ -2787,13 +3209,13 @@ function renderProspects() {
       <td>${p.assigned ? `<div class="assigned-cell"><div class="avatar-sm ${p.assigned.startsWith('Priya') ? '' : (p.assigned.startsWith('Rahul') ? 'blue' : 'purple')}">${p.assigned.split(' ').map(x=>x[0]).join('')}</div>${p.assigned}</div>` : '<span class="unassigned">— Unassigned</span>'}</td>
       <td>
         <div class="action-cell" onclick="event.stopPropagation();">
-          <button class="action-btn approve" onclick="rowAction('approve', '${p.name}')" title="Approve">
+          <button class="action-btn approve" onclick="rowAction('approve', ${p.originalIdx})" title="Approve and assign">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           </button>
-          <button class="action-btn snooze" onclick="rowAction('snooze', '${p.name}')" title="Snooze">
+          <button class="action-btn snooze" onclick="rowAction('snooze', ${p.originalIdx})" title="Snooze for 14 days">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </button>
-          <button class="action-btn reject" onclick="rowAction('reject', '${p.name}')" title="Reject">
+          <button class="action-btn reject" onclick="rowAction('reject', ${p.originalIdx})" title="Reject with reason">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
@@ -2808,14 +3230,90 @@ function openDossier(idx, event) {
   navigateTo('dossier');
 }
 
-function rowAction(action, name) {
-  const messages = {
-    approve: `Approved · ${name} added to pipeline`,
-    snooze: `Snoozed for 14 days · ${name}`,
-    reject: `Rejected · ${name} (please share reason)`
-  };
-  toast(messages[action]);
+function rowAction(action, idx) {
+  const prospect = prospects[idx];
+  if (!prospect) return;
+
+  if (action === 'approve') {
+    // Animate the row out and navigate to outreach for Apex; toast-only for others
+    const row = document.querySelector(`tr[data-row-idx="${idx}"]`);
+    if (row) row.classList.add('row-fading-out');
+    if (idx === 0) {
+      toast(`Approved · ${prospect.name} added to pipeline. Routing to outreach...`);
+      setTimeout(() => navigateTo('outreach'), 800);
+    } else {
+      removedProspects.add(idx);
+      setTimeout(() => {
+        applyFiltersAndRender();
+        toast(`Approved · ${prospect.name} added to pipeline, assigned to BD rep`);
+      }, 400);
+    }
+  } else if (action === 'snooze') {
+    const row = document.querySelector(`tr[data-row-idx="${idx}"]`);
+    if (row) row.classList.add('row-fading-out');
+    removedProspects.add(idx);
+    setTimeout(() => {
+      applyFiltersAndRender();
+      toast(`Snoozed for 14 days · ${prospect.name} will re-surface on Mar 31`);
+    }, 400);
+  } else if (action === 'reject') {
+    openRejectModal(idx);
+  }
 }
+
+// ============= REJECT MODAL =============
+let pendingRejectIdx = null;
+let selectedRejectReason = null;
+
+function openRejectModal(idx) {
+  pendingRejectIdx = idx;
+  selectedRejectReason = null;
+  const prospect = prospects[idx];
+  document.getElementById('reject-modal-title').textContent = `Reject ${prospect.name}`;
+  document.getElementById('reject-notes').value = '';
+  document.querySelectorAll('.reject-reason-option').forEach(o => o.classList.remove('selected'));
+  const confirmBtn = document.getElementById('reject-confirm-btn');
+  confirmBtn.disabled = true;
+  confirmBtn.style.opacity = '0.5';
+  document.getElementById('reject-modal').classList.add('active');
+}
+
+function closeRejectModal() {
+  document.getElementById('reject-modal').classList.remove('active');
+  pendingRejectIdx = null;
+  selectedRejectReason = null;
+}
+
+function selectRejectReason(el) {
+  document.querySelectorAll('.reject-reason-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedRejectReason = el.getAttribute('data-reason');
+  const confirmBtn = document.getElementById('reject-confirm-btn');
+  confirmBtn.disabled = false;
+  confirmBtn.style.opacity = '1';
+}
+
+function confirmReject() {
+  if (pendingRejectIdx === null || !selectedRejectReason) return;
+  const prospect = prospects[pendingRejectIdx];
+  const reasonLabels = {
+    'wrong-sector': 'Wrong sector',
+    'wrong-size': 'Wrong size',
+    'already-lost': 'Already-lost account',
+    'conflict': 'Conflict of interest',
+    'signal-noise': 'Stale/false signal',
+    'other': 'Other'
+  };
+  const reasonLabel = reasonLabels[selectedRejectReason] || selectedRejectReason;
+  removedProspects.add(pendingRejectIdx);
+  closeRejectModal();
+  applyFiltersAndRender();
+  toast(`Rejected · ${prospect.name} (${reasonLabel}) — LLM will adjust scoring`);
+}
+
+document.getElementById('reject-modal').addEventListener('click', e => {
+  if (e.target.id === 'reject-modal') closeRejectModal();
+});
 
 // ============= POPULATE FAMILY LIST =============
 function renderFamilies() {
@@ -2907,15 +3405,6 @@ function toast(msg) {
   const t = document.getElementById('toast');
   t.classList.add('shown');
   toastTimeout = setTimeout(() => t.classList.remove('shown'), 2400);
-}
-
-// ============= REJECT FLOW =============
-function rejectProspect() {
-  const reason = prompt('Reason for rejection? (e.g., wrong industry, already lost account, conflict)');
-  if (reason) {
-    toast(`Rejected · LLM will learn from: "${reason}"`);
-    setTimeout(() => navigateTo('signalBrief'), 800);
-  }
 }
 
 // ============= ENRICHMENT WATERFALL =============
@@ -3045,8 +3534,21 @@ function enrichContact(idx, name, role) {
 }
 
 // ============= INIT =============
-renderProspects();
+populateSectorDropdown();
+applyFiltersAndRender();
 renderFamilies();
+
+// If URL has a hash, navigate to that page (supports refresh/direct link)
+(function handleInitialHash() {
+  const hash = window.location.hash.replace('#', '');
+  const validPages = ['signalBrief', 'dossier', 'outreach'];
+  if (hash && validPages.includes(hash)) {
+    navigateTo(hash, true);
+  } else {
+    // Set initial state so the first back press doesn't leave the app
+    try { window.history.replaceState({ pageId: 'signalBrief' }, '', '#signalBrief'); } catch(e) {}
+  }
+})();
 </script>
 
 </body>
